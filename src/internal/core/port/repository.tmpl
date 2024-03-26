@@ -1,0 +1,15 @@
+package port
+
+import (
+	"context"
+	"{{.Service.Module}}/internal/core/domain"
+)
+
+/**
+ * {{.Name}}Repository implemented by repository.{{.Name}}Repository interface
+ */
+
+type {{.Name|Upper}}Repository interface {
+	Crete(ctx context.Context, {{.Name}} domain.{{.Name|Upper}}) (*domain.{{.Name|Upper}}, error)
+	Get(ctx context.Context, ID int) (*domain.{{.Name|Upper}}, error)
+}

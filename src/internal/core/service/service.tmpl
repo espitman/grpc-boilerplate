@@ -1,0 +1,29 @@
+package service
+
+import (
+	"context"
+	"{{.Service.Module}}/internal/core/domain"
+	"{{.Service.Module}}/internal/core/port"
+)
+
+/**
+ * {{.Name|Upper}}Service implements port.{{.Name|Upper}}Service interface
+ */
+
+type {{.Name|Upper}}Service struct {
+	{{.Name}}Repository port.{{.Name|Upper}}Repository
+}
+
+func New{{.Name|Upper}}Service({{.Name}}Repository port.{{.Name|Upper}}Repository) *{{.Name|Upper}}Service {
+	return &{{.Name|Upper}}Service{
+		{{.Name}}Repository: {{.Name}}Repository,
+	}
+}
+
+func (s *{{.Name|Upper}}Service) Crete(ctx context.Context, {{.Name}} domain.{{.Name|Upper}}) (*domain.{{.Name|Upper}}, error) {
+	return s.{{.Name}}Repository.Crete(ctx, {{.Name}})
+}
+
+func (s *{{.Name|Upper}}Service) Get(ctx context.Context, ID int) (*domain.{{.Name|Upper}}, error) {
+	return s.{{.Name}}Repository.Get(ctx, ID)
+}
