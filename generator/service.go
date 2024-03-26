@@ -10,16 +10,16 @@ import (
 )
 
 type MainService struct {
-	Dist     string
-	Module   string
-	Name     string
-	HTTP     bool
-	GRPC     bool
-	GRPCInfo GRPCInfo
+	Dist     string   `yaml:"-"`
+	Module   string   `yaml:"module"`
+	Name     string   `yaml:"name"`
+	HTTP     bool     `yaml:"http"`
+	GRPC     bool     `yaml:"grpc"`
+	GRPCInfo GRPCInfo `yaml:"GRPCInfo"`
 }
 
 type GRPCInfo struct {
-	PBModule string
+	PBModule string `yaml:"PBModule"`
 }
 
 func NewMainService() *MainService {
@@ -51,10 +51,12 @@ func (m *MainService) create() {
 	m.generateMainFile()
 	m.generateApi()
 	m.generateGRPC()
+	m.createYaml()
 }
 
 func (m *MainService) createDirs() {
 	gutil.CreateDir(m.Dist)
+	gutil.CreateDir(m.Dist + "/.info")
 	gutil.CreateDir(m.Dist + "/cmd")
 	gutil.CreateDir(m.Dist + "/internal")
 	gutil.CreateDir(m.Dist + "/internal/adapter")
@@ -96,6 +98,10 @@ func (m *MainService) generateGRPC() {
 func (m *MainService) getGRPCInfo() {
 	path := cli.TextInput("Enter Proto path:", "git.alibaba.ir/taraaz/salvation2/monorepo/pkg/protos/protogen/price_service", false)
 	m.GRPCInfo.PBModule = path
+}
+
+func (m *MainService) createYaml() {
+	_ = gutil.YamlWriter(m.Dist+"/.info/service.yaml", m)
 }
 
 func (Build) Service() error {
