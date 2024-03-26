@@ -1,0 +1,25 @@
+package main
+
+import (
+	{{- if .HTTP }}
+	"{{.Module}}/cmd/api"
+	{{- end }}
+	{{- if .GRPC }}
+	"{{.Module}}/cmd/gRPC"
+	{{- end }}
+	validatorutil "git.alibaba.ir/taraaz/salvation2/monorepo/pkg/util/validator"
+)
+
+func main() {
+	validate := validatorutil.NewValidator()
+	{{- if .GRPC }}
+    {{- if .HTTP }}
+    go gRPC.Run(validate)
+    {{- else}}
+    gRPC.Run(validate)
+    {{- end }}
+    {{- end }}
+    {{- if .HTTP }}
+	api.Run(validate)
+	{{- end }}
+}

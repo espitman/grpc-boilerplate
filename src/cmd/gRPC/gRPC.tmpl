@@ -1,0 +1,18 @@
+package gRPC
+
+import (
+	grpc "{{.Module}}/internal/adapter/handler/gRPC"
+	// "{{.Module}}/internal/core/port"
+	"github.com/go-playground/validator/v10"
+)
+
+func Run(
+	validate *validator.Validate,
+	// nameService port.NameService,
+) {
+	gRPC := grpc.NewServer(
+	validate,
+	// nameService,
+	)
+	gRPC.Run()
+}

@@ -1,0 +1,28 @@
+package api
+
+import (
+	_ "{{.Module}}/cmd/api/docs"
+	"{{.Module}}/internal/adapter/handler/http"
+	superConf "github.com/espitman/go-super-conf"
+	"github.com/go-playground/validator/v10"
+)
+
+// @title           Salvation2 - {{.Name}}
+// @version         1.0
+// @description     {{.Name}}
+// @contact.name   API Support
+// @contact.email  s.heidar@jabama.com
+// @BasePath  /
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+
+func Run(
+	validate *validator.Validate,
+) {
+
+	httpServer := http.NewServer(
+		superConf.Get("app.port"),
+	)
+	httpServer.Run()
+}
