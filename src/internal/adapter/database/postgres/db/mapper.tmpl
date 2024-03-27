@@ -1,0 +1,43 @@
+package db
+
+import (
+	"git.alibaba.ir/taraaz/salvation2/monorepo/price-service/internal/adapter/database/postgres/ent"
+	"git.alibaba.ir/taraaz/salvation2/monorepo/price-service/internal/adapter/database/postgres/ent/calendar"
+	"git.alibaba.ir/taraaz/salvation2/monorepo/price-service/internal/core/domain"
+)
+
+func calendarSchemaToCalendarDomainPointerMapper(c *ent.Calendar) *domain.Calendar {
+	return &domain.Calendar{
+		Date:            c.Date,
+		Jalali:          c.Jalali,
+		Type:            string(c.Type),
+		IsPeak:          c.IsPeak,
+		IsCustomHoliday: c.IsCustomHoliday,
+	}
+}
+
+func calendarSchemasToCalendarDomainsPointerMapper(cs []*ent.Calendar) []*domain.Calendar {
+	resp := make([]*domain.Calendar, len(cs))
+	for i, c := range cs {
+		resp[i] = calendarSchemaToCalendarDomainPointerMapper(c)
+	}
+	return resp
+}
+
+func calendarDomainToCalendarSchema(d domain.Calendar) *ent.Calendar {
+	return &ent.Calendar{
+		Date:            d.Date,
+		Jalali:          d.Jalali,
+		Type:            calendar.Type(d.Type),
+		IsPeak:          d.IsPeak,
+		IsCustomHoliday: d.IsCustomHoliday,
+	}
+}
+
+func calendarDomainsToCalendarSchemasMapper(ds []domain.Calendar) []*ent.Calendar {
+	resp := make([]*ent.Calendar, len(ds))
+	for i, d := range ds {
+		resp[i] = calendarDomainToCalendarSchema(d)
+	}
+	return resp
+}

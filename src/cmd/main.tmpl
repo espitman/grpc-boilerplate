@@ -1,17 +1,29 @@
 package main
 
 import (
+	"fmt"
 	{{- if .HTTP }}
 	"{{.Module}}/cmd/api"
 	{{- end }}
 	{{- if .GRPC }}
 	"{{.Module}}/cmd/gRPC"
 	{{- end }}
+	{{- if .DB.PostgreSQL }}
+	"{{.Module}}/internal/adapter/database/postgres/db"
+	{{- end }}
 	validatorutil "git.alibaba.ir/taraaz/salvation2/monorepo/pkg/util/validator"
+	superConf "github.com/espitman/go-super-conf"
 )
 
 func main() {
 	validate := validatorutil.NewValidator()
+
+	{{- if .DB.PostgreSQL }}
+    dsn := superConf.Get("db.postgres.dsn")
+    pgDB := db.NewDB(dsn)
+    fmt.Println(pgDB)
+    {{- end }}
+
 	{{- if .GRPC }}
     {{- if .HTTP }}
     go gRPC.Run(validate)

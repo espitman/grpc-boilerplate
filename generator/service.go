@@ -6,6 +6,7 @@ package main
 import (
 	"github.com/espitman/go-super-cli"
 	"github.com/espitman/grpc-boilerplate/generator/gutil"
+	"github.com/magefile/mage/sh"
 	"slices"
 )
 
@@ -16,10 +17,16 @@ type MainService struct {
 	HTTP     bool     `yaml:"http"`
 	GRPC     bool     `yaml:"grpc"`
 	GRPCInfo GRPCInfo `yaml:"GRPCInfo"`
+	DB       DB       `yaml:"DB"`
 }
 
 type GRPCInfo struct {
 	PBModule string `yaml:"PBModule"`
+}
+
+type DB struct {
+	PostgreSQL bool `yaml:"postgreSQL"`
+	MongoDB    bool `yaml:"mongoDB"`
 }
 
 func NewMainService() *MainService {
@@ -34,6 +41,7 @@ func NewMainService() *MainService {
 
 	isHttp := slices.Contains(selectedItems, "HTTP")
 	isGRPC := slices.Contains(selectedItems, "GRPC")
+
 	dist := "../build/" + name
 
 	return &MainService{
@@ -46,11 +54,13 @@ func NewMainService() *MainService {
 
 }
 
-func (m *MainService) create() {
+func (m *MainService) generate() {
 	m.createDirs()
-	m.generateMainFile()
 	m.generateApi()
 	m.generateGRPC()
+	m.generateDB()
+
+	m.generateMainFile()
 	m.createYaml()
 }
 
@@ -61,6 +71,7 @@ func (m *MainService) createDirs() {
 	gutil.CreateDir(m.Dist + "/internal")
 	gutil.CreateDir(m.Dist + "/internal/adapter")
 	gutil.CreateDir(m.Dist + "/internal/adapter/handler")
+	gutil.CreateDir(m.Dist + "/internal/adapter/database")
 	gutil.CreateDir(m.Dist + "/internal/core")
 	gutil.CreateDir(m.Dist + "/internal/core/domain")
 	gutil.CreateDir(m.Dist + "/internal/core/port")
@@ -100,12 +111,59 @@ func (m *MainService) getGRPCInfo() {
 	m.GRPCInfo.PBModule = path
 }
 
+func (m *MainService) generateDB() {
+	_, selectedItems := cli.Choices(
+		"Please choose the database(s) you want to use:",
+		[]string{"PostgreSQL", "MongoDB"},
+		false)
+	isPostgreSQL := slices.Contains(selectedItems, "PostgreSQL")
+	isMongoDB := slices.Contains(selectedItems, "MongoDB")
+	m.DB = DB{
+		PostgreSQL: isPostgreSQL,
+		MongoDB:    isMongoDB,
+	}
+	if isPostgreSQL {
+		m.generatePostgreSQL()
+	}
+	if isMongoDB {
+		m.generateMongoDB()
+	}
+}
+
+func (m *MainService) generatePostgreSQL() {
+
+	gutil.CreateDir(m.Dist + "/internal/adapter/database/postgres")
+	gutil.CreateDir(m.Dist + "/internal/adapter/database/postgres/db")
+	gutil.CreateDir(m.Dist + "/internal/adapter/database/postgres/ent")
+	gutil.CreateDir(m.Dist + "/internal/adapter/database/postgres/ent/schema")
+
+	gutil.Render("../src/internal/adapter/database/postgres/db/db.tmpl", m.Dist+"/internal/adapter/database/postgres/db/db.go", m)
+	gutil.Render("../src/internal/adapter/database/postgres/ent/generate.tmpl", m.Dist+"/internal/adapter/database/postgres/ent/generate.go", m)
+
+	m.generatePostgresEnt()
+}
+
+func (m *MainService) generatePostgresEnt() error {
+	cmd := "cd " + m.Dist + "/internal/adapter/database/postgres/ && go run -mod=mod entgo.io/ent/cmd/ent new User"
+	sh.RunV("sh", "-c", cmd)
+
+	cmd2 := "go generate " + m.Dist + "/internal/adapter/database/postgres/ent"
+	sh.RunV("sh", "-c", cmd2)
+
+	gutil.ReplaceImportPath(m.Dist+"/internal/adapter/database/postgres/ent", m.Name, m.Module)
+	return nil
+}
+
+func (m *MainService) generateMongoDB() {
+	// TODO: mongoDB
+}
+
 func (m *MainService) createYaml() {
 	_ = gutil.YamlWriter(m.Dist+"/.info/service.yaml", m)
 }
 
 func (Build) Service() error {
 	m := NewMainService()
-	m.create()
+	m.generate()
 	return nil
 }
