@@ -9,4 +9,6 @@ func (r *Router) {{.HTTPInfo.Name}}V1Router(v1 fiber.Router) {
 
 	v1{{.HTTPInfo.Name|Upper}}.Post("/", r.{{.HTTPInfo.Name}}Handler.Create)
 	v1{{.HTTPInfo.Name|Upper}}.Get("/:ID", r.{{.HTTPInfo.Name}}Handler.Get)
+    v1{{.HTTPInfo.Name|Upper}}.Put("/:ID", r.{{.HTTPInfo.Name}}Handler.Update)
+    v1{{.HTTPInfo.Name|Upper}}.Delete("/:ID", r.{{.HTTPInfo.Name}}Handler.Delete)
 }
