@@ -1,0 +1,19 @@
+package http
+
+import "errors"
+
+func (h *{{.HTTPInfo.Name|Upper}}Handler) createValidator(reqDto *{{.HTTPInfo.Name}}CreateRequestDto) error {
+	if err := h.validate.Struct(reqDto); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (h *{{.HTTPInfo.Name|Upper}}Handler) getValidator(ID int) error {
+	err := h.validate.Var(ID, "required")
+	if err != nil {
+		return errors.New("ID is required")
+	}
+	return nil
+}
+

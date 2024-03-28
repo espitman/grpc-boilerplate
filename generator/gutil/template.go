@@ -14,7 +14,7 @@ func Render(tmplFile string, outputFile string, data any) {
 
 	funcMap := template.FuncMap{
 		"Time":       Time,
-		"Upper":      CapitalizeFirstChar,
+		"Upper":      Upper,
 		"Kebab":      KebabCase,
 		"ModulePath": GetModulePath,
 	}

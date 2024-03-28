@@ -1,0 +1,12 @@
+package http
+
+import "github.com/gofiber/fiber/v2"
+
+func (r *Router) {{.HTTPInfo.Name}}V1Router(v1 fiber.Router) {
+	v1{{.HTTPInfo.Name|Upper}} := v1.Group("/{{.HTTPInfo.Name}}")
+
+	v1{{.HTTPInfo.Name|Upper}}.Use(AuthMiddleware)
+
+	v1{{.HTTPInfo.Name|Upper}}.Post("/", r.{{.HTTPInfo.Name}}Handler.Create)
+	v1{{.HTTPInfo.Name|Upper}}.Get("/:ID", r.{{.HTTPInfo.Name}}Handler.Get)
+}

@@ -1,0 +1,23 @@
+package schema
+
+import (
+	"entgo.io/ent"
+	"entgo.io/ent/schema/field"
+)
+
+// {{.Domain|Upper}} holds the schema definition for the {{.Domain|Upper}} entity.
+type {{.Domain|Upper}} struct {
+	ent.Schema
+}
+
+// Fields of the {{.Domain|Upper}}.
+func ({{.Domain|Upper}}) Fields() []ent.Field {
+	return []ent.Field{
+		field.String("Name"),
+	}
+}
+
+// Edges of the {{.Domain|Upper}}.
+func ({{.Domain|Upper}}) Edges() []ent.Edge {
+	return nil
+}

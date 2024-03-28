@@ -6,19 +6,24 @@ import (
 
 type Server struct {
 	port string
+	{{.HTTPInfo.Name}}Handler  *{{.HTTPInfo.Name|Upper}}Handler
 }
 
 func NewServer(
 	port string,
+	{{.HTTPInfo.Name}}Handler *{{.HTTPInfo.Name|Upper}}Handler,
 ) Server {
 	return Server{
 		port: port,
+		{{.HTTPInfo.Name}}Handler: {{.HTTPInfo.Name}}Handler,
 	}
 }
 
 func (s *Server) Run() {
 	app := fiber.New()
-	routes := newRouter()
+	routes := newRouter(
+	    s.{{.HTTPInfo.Name}}Handler,
+	)
 	routes.serve(app)
 	_ = app.Listen(":" + s.port)
 }

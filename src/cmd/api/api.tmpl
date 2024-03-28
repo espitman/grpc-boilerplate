@@ -3,6 +3,7 @@ package api
 import (
 	_ "{{.Module}}/cmd/api/docs"
 	"{{.Module}}/internal/adapter/handler/http"
+	"{{.Module}}/internal/core/port"
 	superConf "github.com/espitman/go-super-conf"
 	"github.com/go-playground/validator/v10"
 )
@@ -19,10 +20,13 @@ import (
 
 func Run(
 	validate *validator.Validate,
+	{{.Domain}}Service port.{{.Domain|Upper}}Service,
 ) {
+    {{.Domain}}Handler := http.New{{.Domain|Upper}}Handler(validate, {{.Domain}}Service)
 
 	httpServer := http.NewServer(
 		superConf.Get("app.port"),
+		{{.Domain}}Handler,
 	)
 	httpServer.Run()
 }

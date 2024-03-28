@@ -1,43 +1,34 @@
 package db
 
 import (
-	"git.alibaba.ir/taraaz/salvation2/monorepo/price-service/internal/adapter/database/postgres/ent"
-	"git.alibaba.ir/taraaz/salvation2/monorepo/price-service/internal/adapter/database/postgres/ent/calendar"
-	"git.alibaba.ir/taraaz/salvation2/monorepo/price-service/internal/core/domain"
+	"{{.Module}}/internal/adapter/database/postgres/ent"
+	"{{.Module}}/internal/core/domain"
 )
 
-func calendarSchemaToCalendarDomainPointerMapper(c *ent.Calendar) *domain.Calendar {
-	return &domain.Calendar{
-		Date:            c.Date,
-		Jalali:          c.Jalali,
-		Type:            string(c.Type),
-		IsPeak:          c.IsPeak,
-		IsCustomHoliday: c.IsCustomHoliday,
+func {{.Domain}}SchemaTo{{.Domain|Upper}}DomainPointerMapper(c *ent.{{.Domain|Upper}}) *domain.{{.Domain|Upper}} {
+	return &domain.{{.Domain|Upper}}{
+		Name:            c.Name,
 	}
 }
 
-func calendarSchemasToCalendarDomainsPointerMapper(cs []*ent.Calendar) []*domain.Calendar {
-	resp := make([]*domain.Calendar, len(cs))
+func {{.Domain}}SchemasTo{{.Domain|Upper}}DomainsPointerMapper(cs []*ent.{{.Domain|Upper}}) []*domain.{{.Domain|Upper}} {
+	resp := make([]*domain.{{.Domain|Upper}}, len(cs))
 	for i, c := range cs {
-		resp[i] = calendarSchemaToCalendarDomainPointerMapper(c)
+		resp[i] = {{.Domain}}SchemaTo{{.Domain|Upper}}DomainPointerMapper(c)
 	}
 	return resp
 }
 
-func calendarDomainToCalendarSchema(d domain.Calendar) *ent.Calendar {
-	return &ent.Calendar{
-		Date:            d.Date,
-		Jalali:          d.Jalali,
-		Type:            calendar.Type(d.Type),
-		IsPeak:          d.IsPeak,
-		IsCustomHoliday: d.IsCustomHoliday,
+func {{.Domain}}DomainTo{{.Domain|Upper}}Schema(d domain.{{.Domain|Upper}}) *ent.{{.Domain|Upper}} {
+	return &ent.{{.Domain|Upper}}{
+		Name:            d.Name,
 	}
 }
 
-func calendarDomainsToCalendarSchemasMapper(ds []domain.Calendar) []*ent.Calendar {
-	resp := make([]*ent.Calendar, len(ds))
+func {{.Domain}}DomainsTo{{.Domain|Upper}}SchemasMapper(ds []domain.{{.Domain|Upper}}) []*ent.{{.Domain|Upper}} {
+	resp := make([]*ent.{{.Domain|Upper}}, len(ds))
 	for i, d := range ds {
-		resp[i] = calendarDomainToCalendarSchema(d)
+		resp[i] = {{.Domain}}DomainTo{{.Domain|Upper}}Schema(d)
 	}
 	return resp
 }

@@ -1,7 +1,8 @@
 package main
 
 import (
-	"fmt"
+    {{- if .DB.PostgreSQL }}
+	{{- end }}
 	{{- if .HTTP }}
 	"{{.Module}}/cmd/api"
 	{{- end }}
@@ -11,8 +12,11 @@ import (
 	{{- if .DB.PostgreSQL }}
 	"{{.Module}}/internal/adapter/database/postgres/db"
 	{{- end }}
+	"{{.Module}}/internal/core/service"
 	validatorutil "git.alibaba.ir/taraaz/salvation2/monorepo/pkg/util/validator"
+	{{- if .DB.PostgreSQL }}
 	superConf "github.com/espitman/go-super-conf"
+	{{- end }}
 )
 
 func main() {
@@ -21,17 +25,29 @@ func main() {
 	{{- if .DB.PostgreSQL }}
     dsn := superConf.Get("db.postgres.dsn")
     pgDB := db.NewDB(dsn)
-    fmt.Println(pgDB)
     {{- end }}
+
+    {{.Domain}}Repository := db.New{{.Domain|Upper}}Repository(pgDB.Client)
+    {{.Domain}}Service := service.New{{.Domain|Upper}}Service({{.Domain}}Repository)
+
 
 	{{- if .GRPC }}
     {{- if .HTTP }}
-    go gRPC.Run(validate)
+    go gRPC.Run(
+    validate,
+        {{.Domain}}Service,
+    )
     {{- else}}
-    gRPC.Run(validate)
+    gRPC.Run(
+        validate,
+        {{.Domain}}Service,
+    )
     {{- end }}
     {{- end }}
     {{- if .HTTP }}
-	api.Run(validate)
+	api.Run(
+	    validate,
+	    {{.Domain}}Service,
+	)
 	{{- end }}
 }

@@ -1,0 +1,72 @@
+package http
+
+import (
+	fiberutil "git.alibaba.ir/taraaz/salvation2/monorepo/pkg/util/fiber"
+	"{{.Module}}/internal/core/port"
+	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
+)
+
+type {{.HTTPInfo.Name|Upper}}Handler struct {
+	validate     *validator.Validate
+	{{.HTTPInfo.ServiceName|Upper}}Service port.{{.HTTPInfo.ServiceName|Upper}}Service
+}
+
+func New{{.HTTPInfo.Name|Upper}}Handler(validate *validator.Validate, {{.HTTPInfo.ServiceName|Upper}}Service port.{{.HTTPInfo.ServiceName|Upper}}Service) *{{.HTTPInfo.Name|Upper}}Handler {
+	return &{{.HTTPInfo.Name|Upper}}Handler{
+		validate:     validate,
+		{{.HTTPInfo.ServiceName|Upper}}Service: {{.HTTPInfo.ServiceName|Upper}}Service,
+	}
+}
+
+// Create
+// @Summary Create
+// @Description Create
+// @Tags {{.HTTPInfo.Name|Upper}}
+// @Produce json
+// @Param body body http.{{.HTTPInfo.Name}}CreateRequestDto true "body"
+// @Success 200 {object} http.{{.HTTPInfo.Name}}GetResponseDto
+// @Router /api/v1/{{.HTTPInfo.Name}} [post]
+func (h *{{.HTTPInfo.Name|Upper}}Handler) Create(c *fiber.Ctx) error {
+	var fctx = fiberutil.FiberCtx{Ctx: c}
+	ctx := fctx.Context()
+	reqDto := new({{.HTTPInfo.Name}}CreateRequestDto)
+	if err := fctx.BodyParser(reqDto); err != nil {
+		return fctx.BadRequest(err)
+	}
+	if err := h.createValidator(reqDto); err != nil {
+		return fctx.BadRequest(err)
+	}
+	{{.HTTPInfo.Name}} := {{.HTTPInfo.Name}}CreateRequestDtoTo{{.HTTPInfo.Name|Upper}}DomainMapper(*reqDto)
+	created{{.HTTPInfo.Name|Upper}}, err := h.{{.HTTPInfo.ServiceName|Upper}}Service.Crete(ctx, {{.HTTPInfo.Name}})
+	if err != nil {
+		return fctx.Conflict(err)
+	}
+	resp := {{.HTTPInfo.DomainName}}DomainTo{{.HTTPInfo.Name|Upper}}GetResponseDtoMapper(created{{.HTTPInfo.Name|Upper}})
+	return fctx.ResponseOk(resp.Payload)
+}
+
+// Get
+// @Summary Get
+// @Description Get
+// @Tags {{.HTTPInfo.Name|Upper}}
+// @ID get{{.HTTPInfo.Name|Upper}}
+// @Produce json
+// @Param ID path string false "accommodation-id"
+// @Success 200 {object} http.{{.HTTPInfo.Name}}GetResponseDto
+// @Security JwtAuth
+// @Router /api/v1/{{.HTTPInfo.Name}}/{ID} [get]
+func (h *{{.HTTPInfo.Name|Upper}}Handler) Get(c *fiber.Ctx) error {
+	var fctx = fiberutil.FiberCtx{Ctx: c}
+	ctx := fctx.Context()
+	ID, _ := c.ParamsInt("ID")
+	if err := h.getValidator(ID); err != nil {
+		return fctx.BadRequest(err)
+	}
+	{{.HTTPInfo.Name}}, err := h.{{.HTTPInfo.ServiceName|Upper}}Service.Get(ctx, ID)
+	if err != nil {
+		return fctx.BadRequest(err)
+	}
+	resp := {{.HTTPInfo.DomainName}}DomainTo{{.HTTPInfo.Name|Upper}}GetResponseDtoMapper({{.HTTPInfo.Name}})
+	return fctx.ResponseOk(resp.Payload)
+}

@@ -13,7 +13,7 @@ func Time() string {
 	return currentTimeString
 }
 
-func CapitalizeFirstChar(str string) string {
+func Upper(str string) string {
 	if len(str) == 0 {
 		return str // Return the original string if it's empty
 	}

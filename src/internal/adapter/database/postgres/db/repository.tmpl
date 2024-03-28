@@ -2,11 +2,8 @@ package db
 
 import (
 	"context"
-	"git.alibaba.ir/taraaz/salvation2/monorepo/price-service/internal/adapter/database/postgres/ent"
-	"git.alibaba.ir/taraaz/salvation2/monorepo/price-service/internal/adapter/database/postgres/ent/day"
-	"git.alibaba.ir/taraaz/salvation2/monorepo/price-service/internal/core/domain"
-	"sync"
-	"time"
+	"{{.Module}}/internal/adapter/database/postgres/ent"
+	"{{.Module}}/internal/core/domain"
 )
 
 type contextKey string
@@ -15,216 +12,37 @@ const (
 	transactionKey contextKey = "tx"
 )
 
-type DayRepository struct {
+type {{.Domain|Upper}}Repository struct {
 	client *ent.Client
 }
 
 /**
- * dayRepository implements port.dayRepository interface
+ * {{.Domain}}Repository implements port.{{.Domain}}Repository interface
  */
 
-func NewDayRepository(client *ent.Client) *DayRepository {
-	return &DayRepository{
+func New{{.Domain|Upper}}Repository(client *ent.Client) *{{.Domain|Upper}}Repository {
+	return &{{.Domain|Upper}}Repository{
 		client: client,
 	}
 }
 
-func (r *DayRepository) unGuaranteeAccommodation(ctx context.Context, accommodationID string, dates []time.Time) (int, error) {
-	var clientDay = r.client.Day
-	tx, ok := ctx.Value(transactionKey).(*ent.Tx)
-	if ok {
-		clientDay = tx.Day
-	}
-
-	n, err := clientDay.
-		Update().
-		Where(
-			day.AccommodationID(accommodationID),
-			day.DateIn(dates...),
-		).
-		SetGuarantee(false).
+func (r *{{.Domain|Upper}}Repository) Crete(ctx context.Context, d domain.{{.Domain|Upper}}) (*domain.{{.Domain|Upper}}, error) {
+	newD, err := r.client.{{.Domain|Upper}}.
+		Create().
+		SetName(d.Name).
 		Save(ctx)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
-	return n, nil
+	return {{.Domain}}SchemaTo{{.Domain|Upper}}DomainPointerMapper(newD), nil
+
 }
 
-func (r *DayRepository) Crete(ctx context.Context, days []domain.Day) ([]*domain.Day, error) {
 
-	var clientDay = r.client.Day
-	tx, ok := ctx.Value(transactionKey).(*ent.Tx)
-	if ok {
-		clientDay = tx.Day
-	}
-
-	cDays := dayDomainsToDaySchemasMapper(days)
-	var bulk []*ent.DayCreate //nolint:prealloc
-	for _, d := range cDays {
-		q := clientDay.Create().
-			SetAccommodationID(d.AccommodationID).
-			SetDate(d.Date).
-			SetPrice(d.Price).
-			SetDiscount(d.Discount).
-			SetJabamaDiscount(d.JabamaDiscount)
-		if d.Status != "" {
-			q.SetStatus(d.Status)
-		}
-		bulk = append(bulk, q)
-	}
-	err := clientDay.
-		CreateBulk(bulk...).
-		OnConflictColumns(day.FieldAccommodationID, day.FieldDate).
-		Update(func(u *ent.DayUpsert) {
-			u.UpdatePrice()
-			u.UpdateDiscount()
-			u.UpdateJabamaDiscount()
-		}).
-		Exec(ctx)
-
+func (r *{{.Domain|Upper}}Repository) Get(ctx context.Context, ID int) (*domain.{{.Domain|Upper}}, error) {
+	u, err := r.client.{{.Domain|Upper}}.Get(ctx, ID)
 	if err != nil {
 		return nil, err
 	}
-	response := daySchemasToDayDomainsPointerMapper(cDays)
-	return response, nil
-}
-
-func (r *DayRepository) ChangeStatus(ctx context.Context, accommodationID string, enable bool, dates []time.Time) (int, error) {
-	var clientDay = r.client.Day
-	tx, ok := ctx.Value(transactionKey).(*ent.Tx)
-	if ok {
-		clientDay = tx.Day
-	}
-
-	status := "available"
-	if !enable {
-		status = "disabled"
-	}
-	n, err := clientDay.
-		Update().
-		Where(
-			day.AccommodationID(accommodationID),
-			day.DateIn(dates...),
-		).
-		SetStatus(day.Status(status)).
-		Save(ctx)
-	if err != nil {
-		return 0, err
-	}
-	return n, nil
-}
-
-func (r *DayRepository) GetAccommodationDays(ctx context.Context, accommodationID string, dates []time.Time) ([]*domain.Day, error) {
-	result, err := r.client.Day.Query().
-		Where(
-			day.AccommodationID(accommodationID),
-			day.DateIn(dates...),
-		).All(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return daySchemasToDayDomainsPointerMapper(result), nil
-}
-
-func (r *DayRepository) Disable(ctx context.Context, accommodationID string, dates []time.Time, newDays []domain.Day) (int, error) {
-	tx, _ := r.client.Tx(ctx)
-	ctx = context.WithValue(ctx, transactionKey, tx)
-	ne, err := r.ChangeStatus(ctx, accommodationID, false, dates)
-	if err != nil {
-		_ = tx.Rollback()
-		return 0, err
-	}
-	_, err = r.Crete(ctx, newDays)
-	if err != nil {
-		_ = tx.Rollback()
-		return 0, err
-	}
-	_ = tx.Commit()
-	return ne + len(newDays), nil
-}
-
-func (r *DayRepository) Guarantee(ctx context.Context, days []domain.Day) ([]*domain.Day, error) {
-	var clientDay = r.client.Day
-	tx, ok := ctx.Value(transactionKey).(*ent.Tx)
-	if ok {
-		clientDay = tx.Day
-	}
-
-	cDays := dayDomainsToDaySchemasMapper(days)
-	var bulk []*ent.DayCreate //nolint:prealloc
-	for _, d := range cDays {
-		q := clientDay.Create().
-			SetAccommodationID(d.AccommodationID).
-			SetDate(d.Date).
-			SetPrice(d.Price).
-			SetDiscount(d.Discount).
-			SetJabamaDiscount(d.JabamaDiscount).
-			SetGuarantee(d.Guarantee)
-		bulk = append(bulk, q)
-	}
-	err := clientDay.
-		CreateBulk(bulk...).
-		OnConflictColumns(day.FieldAccommodationID, day.FieldDate).
-		Update(func(u *ent.DayUpsert) {
-			u.UpdatePrice()
-			u.UpdateDiscount()
-			u.UpdateJabamaDiscount()
-			u.UpdateGuarantee()
-		}).
-		Exec(ctx)
-
-	if err != nil {
-		return nil, err
-	}
-	response := daySchemasToDayDomainsPointerMapper(cDays)
-	return response, nil
-}
-
-func (r *DayRepository) UnGuarantee(ctx context.Context, accommodationsDates map[string][]time.Time) (int, error) {
-	tx, _ := r.client.Tx(ctx)
-	ctx = context.WithValue(ctx, transactionKey, tx)
-
-	count := 0
-	var wg sync.WaitGroup
-	var mu sync.Mutex
-	errCh := make(chan error, len(accommodationsDates))
-	wg.Add(len(accommodationsDates))
-	unGuarantee := func(accommodationID string, accommodationsDates []time.Time) {
-		n, err := r.unGuaranteeAccommodation(ctx, accommodationID, accommodationsDates)
-		if err != nil {
-			errCh <- err
-		}
-		mu.Lock()
-		count += n
-		mu.Unlock()
-		wg.Done()
-	}
-	for accommodationID, dates := range accommodationsDates {
-		go unGuarantee(accommodationID, dates)
-	}
-
-	wg.Wait()
-	close(errCh)
-
-	for err := range errCh {
-		if err != nil {
-			_ = tx.Rollback()
-			return 0, err
-		}
-	}
-	_ = tx.Commit()
-	return count, nil
-}
-
-func (r *DayRepository) GetAccommodationDaysRange(ctx context.Context, accommodationID string, startDate time.Time, endDate time.Time) ([]*domain.Day, error) {
-	result, err := r.client.Day.Query().
-		Where(
-			day.AccommodationID(accommodationID),
-			day.DateGTE(startDate),
-			day.DateLTE(endDate),
-		).All(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return daySchemasToDayDomainsPointerMapper(result), nil
+	return {{.Domain}}SchemaTo{{.Domain|Upper}}DomainPointerMapper(u), nil
 }
