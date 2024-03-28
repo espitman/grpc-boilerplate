@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 	pb "{{.GRPCInfo.PBModule}}"
-	// "{{.Module}}/internal/core/port"
+	"{{.Module}}/internal/core/port"
 	"github.com/go-playground/validator/v10"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -17,11 +17,11 @@ type Server struct {
 
 func NewServer(
 	validate *validator.Validate,
-	// nameService port.NameService,
+	{{.Domain}}Service port.{{.Domain|Upper}}Service,
 ) *Server {
 	handler := NewHandler(
 	validate,
-	// nameService,
+	{{.Domain}}Service,
 	)
 	return &Server{
 		validate: validate,

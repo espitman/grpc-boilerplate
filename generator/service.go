@@ -128,7 +128,7 @@ func (m *MainService) generateCore() {
 
 	d := CoreDomain{
 		Service: *m,
-		Name:    m.HTTPInfo.Name,
+		Name:    m.Domain,
 		Dist:    dist,
 	}
 	d.create()
@@ -167,9 +167,9 @@ func (m *MainService) generateApi() {
 }
 
 func (m *MainService) getHTTPInfo() {
-	handlerName := cli.TextInput("Enter Http Handler name:", "handler", false)
+	//handlerName := cli.TextInput("Enter Http Handler name:", "handler", false)
 	m.HTTPInfo = HTTPInfo{
-		Name:        handlerName,
+		Name:        m.Domain,
 		ServiceName: m.Domain,
 		DomainName:  m.Domain,
 	}
@@ -248,9 +248,11 @@ func (m *MainService) generateMongoDB() {
 }
 
 func (m *MainService) generateSwagger() {
-	dist := strings.ReplaceAll(m.Dist, "../build/", "./build/")
-	cmd := "cd .. && swag init -g " + dist + "/cmd/api/api.go -o " + dist + "/cmd/api/docs --parseDependency"
-	sh.RunV("sh", "-c", cmd)
+	if m.HTTP {
+		dist := strings.ReplaceAll(m.Dist, "../build/", "./build/")
+		cmd := "cd .. && swag init -g " + dist + "/cmd/api/api.go -o " + dist + "/cmd/api/docs --parseDependency"
+		sh.RunV("sh", "-c", cmd)
+	}
 }
 
 func (m *MainService) generateConfig() {

@@ -2,22 +2,22 @@ package grpc
 
 import (
 	pb "{{.GRPCInfo.PBModule}}"
-	// "{{.Module}}/internal/core/port"
+	"{{.Module}}/internal/core/port"
 	"github.com/go-playground/validator/v10"
 )
 
 type Handler struct {
 	pb.UnimplementedPriceServiceServer
 	validate *validator.Validate
-	// nameService port.NameService
+	{{.Domain}}Service port.{{.Domain|Upper}}Service
 }
 
 func NewHandler(
 	validate *validator.Validate,
-	// nameService port.NameService,
+	{{.Domain}}Service port.{{.Domain|Upper}}Service,
 ) *Handler {
 	return &Handler{
 		validate: validate,
-		//nameService: nameService
+		{{.Domain}}Service: {{.Domain}}Service,
 	}
 }
