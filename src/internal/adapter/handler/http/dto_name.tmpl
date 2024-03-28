@@ -17,20 +17,20 @@ type {{.HTTPInfo.Name}}GetResponseDto struct {
 }
 
 
-type {{.Name}}UpdateRequestDto struct {
+type {{.HTTPInfo.Name}}UpdateRequestDto struct {
 	Name string `json:"name" validate:"required"`
 }
 
-type {{.Name}}UpdateResponseDto struct {
+type {{.HTTPInfo.Name}}UpdateResponseDto struct {
 	ResponseDto
 	Payload struct {
-		{{.Name|Upper}} {{.Name}}Dto `json:"{{.Name}}"`
+		{{.HTTPInfo.Name|Upper}} {{.HTTPInfo.Name}}Dto `json:"{{.HTTPInfo.Name}}"`
 	} `json:"payload"`
 }
 
-type {{.Name}}DeleteResponseDto struct {
+type {{.HTTPInfo.Name}}DeleteResponseDto struct {
 	ResponseDto
 	Payload struct {
-		{{.Name|Upper}} {{.Name}}Dto `json:"{{.Name}}"`
+		{{.HTTPInfo.Name|Upper}} {{.HTTPInfo.Name}}Dto `json:"{{.HTTPInfo.Name}}"`
 	} `json:"payload"`
 }

@@ -20,24 +20,24 @@ func {{.Domain}}DomainTo{{.Domain|Upper}}GetResponseDtoMapper(d *domain.{{.Domai
 }
 
 
-func {{.Name}}UpdateRequestDtoTo{{.Name|Upper}}DomainMapper(dto {{.Name}}UpdateRequestDto) domain.{{.Name|Upper}} {
-	return domain.{{.Name|Upper}}{
+func {{.Domain}}UpdateRequestDtoTo{{.Domain|Upper}}DomainMapper(dto {{.Domain}}UpdateRequestDto) domain.{{.Domain|Upper}} {
+	return domain.{{.Domain|Upper}}{
 		Name: dto.Name,
 	}
 }
 
-func {{.Name}}DomainTo{{.Name|Upper}}UpdateResponseDtoMapper(d *domain.{{.Name|Upper}}) {{.Name}}UpdateResponseDto {
-	var resp {{.Name}}UpdateResponseDto
-	resp.Payload.{{.Name|Upper}} = {{.Name}}Dto{
+func {{.Domain}}DomainTo{{.Domain|Upper}}UpdateResponseDtoMapper(d *domain.{{.Domain|Upper}}) {{.Domain}}UpdateResponseDto {
+	var resp {{.Domain}}UpdateResponseDto
+	resp.Payload.{{.Domain|Upper}} = {{.Domain}}Dto{
 		ID:   d.ID,
 		Name: d.Name,
 	}
 	return resp
 }
 
-func {{.Name}}DomainTo{{.Name|Upper}}DeleteResponseDtoMapper(d *domain.{{.Name|Upper}}) {{.Name}}DeleteResponseDto {
-	var resp {{.Name}}DeleteResponseDto
-	resp.Payload.{{.Name|Upper}} = {{.Name}}Dto{
+func {{.Domain}}DomainTo{{.Domain|Upper}}DeleteResponseDtoMapper(d *domain.{{.Domain|Upper}}) {{.Domain}}DeleteResponseDto {
+	var resp {{.Domain}}DeleteResponseDto
+	resp.Payload.{{.Domain|Upper}} = {{.Domain}}Dto{
 		ID:   d.ID,
 		Name: d.Name,
 	}

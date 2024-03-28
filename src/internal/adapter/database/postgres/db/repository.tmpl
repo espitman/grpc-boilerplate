@@ -35,12 +35,30 @@ func (r *{{.Domain|Upper}}Repository) Crete(ctx context.Context, d domain.{{.Dom
 		return nil, err
 	}
 	return {{.Domain}}SchemaTo{{.Domain|Upper}}DomainPointerMapper(newD), nil
-
 }
-
 
 func (r *{{.Domain|Upper}}Repository) Get(ctx context.Context, ID int) (*domain.{{.Domain|Upper}}, error) {
 	u, err := r.client.{{.Domain|Upper}}.Get(ctx, ID)
+	if err != nil {
+		return nil, err
+	}
+	return {{.Domain}}SchemaTo{{.Domain|Upper}}DomainPointerMapper(u), nil
+}
+
+func (r *{{.Domain|Upper}}Repository) Update(ctx context.Context, ID int, d domain.{{.Domain|Upper}}) (*domain.{{.Domain|Upper}}, error) {
+	u, err := r.client.{{.Domain|Upper}}.UpdateOneID(ID).SetName(d.Name).Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return {{.Domain}}SchemaTo{{.Domain|Upper}}DomainPointerMapper(u), nil
+}
+
+func (r *{{.Domain|Upper}}Repository) Delete(ctx context.Context, ID int) (*domain.{{.Domain|Upper}}, error) {
+	u, err := r.client.{{.Domain|Upper}}.Get(ctx, ID)
+	if err != nil {
+		return nil, err
+	}
+	err = r.client.{{.Domain|Upper}}.DeleteOneID(ID).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
