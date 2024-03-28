@@ -7,7 +7,7 @@ import (
 )
 
 type Handler struct {
-	pb.UnimplementedPriceServiceServer
+	pb.Unimplemented{{.Domain|Upper}}ServiceServer
 	validate *validator.Validate
 	{{.Domain}}Service port.{{.Domain|Upper}}Service
 }
