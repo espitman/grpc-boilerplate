@@ -27,3 +27,11 @@ func (s *{{.Name|Upper}}Service) Crete(ctx context.Context, {{.Name}} domain.{{.
 func (s *{{.Name|Upper}}Service) Get(ctx context.Context, ID int) (*domain.{{.Name|Upper}}, error) {
 	return s.{{.Name}}Repository.Get(ctx, ID)
 }
+
+func (s *{{.Name|Upper}}Service) Update(ctx context.Context, ID int, {{.Name}} domain.{{.Name|Upper}}) (*domain.{{.Name|Upper}}, error) {
+	return s.{{.Name}}Repository.Update(ctx, ID, {{.Name}})
+}
+
+func (s *{{.Name|Upper}}Service) Delete(ctx context.Context, ID int) (*domain.{{.Name|Upper}}, error) {
+	return s.{{.Name}}Repository.Delete(ctx, ID)
+}

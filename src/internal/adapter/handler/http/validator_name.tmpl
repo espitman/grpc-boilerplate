@@ -17,3 +17,23 @@ func (h *{{.HTTPInfo.Name|Upper}}Handler) getValidator(ID int) error {
 	return nil
 }
 
+func (h *{{.Name|Upper}}Handler) updateValidator(ID int, reqDto *{{.Name}}UpdateRequestDto) error {
+	err := h.validate.Var(ID, "required")
+	if err != nil {
+		return errors.New("ID is required")
+	}
+	if err := h.validate.Struct(reqDto); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (h *{{.Name|Upper}}Handler) deleteValidator(ID int) error {
+	err := h.validate.Var(ID, "required")
+	if err != nil {
+		return errors.New("ID is required")
+	}
+	return nil
+}
+
+

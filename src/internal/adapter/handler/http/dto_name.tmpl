@@ -16,3 +16,21 @@ type {{.HTTPInfo.Name}}GetResponseDto struct {
 	} `json:"payload"`
 }
 
+
+type {{.Name}}UpdateRequestDto struct {
+	Name string `json:"name" validate:"required"`
+}
+
+type {{.Name}}UpdateResponseDto struct {
+	ResponseDto
+	Payload struct {
+		{{.Name|Upper}} {{.Name}}Dto `json:"{{.Name}}"`
+	} `json:"payload"`
+}
+
+type {{.Name}}DeleteResponseDto struct {
+	ResponseDto
+	Payload struct {
+		{{.Name|Upper}} {{.Name}}Dto `json:"{{.Name}}"`
+	} `json:"payload"`
+}

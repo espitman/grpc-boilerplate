@@ -12,4 +12,6 @@ import (
 type {{.Name|Upper}}Service interface {
 	 Crete(ctx context.Context, {{.Name}} domain.{{.Name|Upper}}) (*domain.{{.Name|Upper}}, error)
 	 Get(ctx context.Context, ID int) (*domain.{{.Name|Upper}}, error)
+     Update(ctx context.Context, ID int, {{.Name}} domain.{{.Name|Upper}}) (*domain.{{.Name|Upper}}, error)
+     Delete(ctx context.Context, ID int) (*domain.{{.Name|Upper}}, error)
 }

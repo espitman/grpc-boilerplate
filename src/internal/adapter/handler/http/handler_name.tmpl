@@ -70,3 +70,53 @@ func (h *{{.HTTPInfo.Name|Upper}}Handler) Get(c *fiber.Ctx) error {
 	resp := {{.HTTPInfo.DomainName}}DomainTo{{.HTTPInfo.Name|Upper}}GetResponseDtoMapper({{.HTTPInfo.Name}})
 	return fctx.ResponseOk(resp.Payload)
 }
+
+// Update
+// @Summary Update
+// @Description Update
+// @Tags {{.Name|Upper}}
+// @Produce json
+// @Param body body http.{{.Name}}UpdateRequestDto true "body"
+// @Success 200 {object} http.{{.Name}}UpdateResponseDto
+// @Router /api/v1/{{.Name}}/{ID} [put]
+func (h *{{.Name|Upper}}Handler) Update(c *fiber.Ctx) error {
+	var fctx = fiberutil.FiberCtx{Ctx: c}
+	ctx := fctx.Context()
+	ID, _ := c.ParamsInt("ID")
+	reqDto := new({{.Name}}UpdateRequestDto)
+	if err := fctx.BodyParser(reqDto); err != nil {
+		return fctx.BadRequest(err)
+	}
+	if err := h.updateValidator(ID, reqDto); err != nil {
+		return fctx.BadRequest(err)
+	}
+	{{.Name}} := {{.Name}}UpdateRequestDtoTo{{.Name|Upper}}DomainMapper(*reqDto)
+	edited{{.Name|Upper}}, err := h.{{.Name|Upper}}Service.Update(ctx, ID, {{.Name}})
+	if err != nil {
+		return fctx.Conflict(err)
+	}
+	resp := {{.Name}}DomainTo{{.Name|Upper}}UpdateResponseDtoMapper(edited{{.Name|Upper}})
+	return fctx.ResponseOk(resp.Payload)
+}
+
+// Delete
+// @Summary Delete
+// @Description Delete
+// @Tags {{.Name|Upper}}
+// @Produce json
+// @Success 200 {object} http.{{.Name}}DeleteResponseDto
+// @Router /api/v1/{{.Name}}/{ID} [delete]
+func (h *{{.Name|Upper}}Handler) Delete(c *fiber.Ctx) error {
+	var fctx = fiberutil.FiberCtx{Ctx: c}
+	ctx := fctx.Context()
+	ID, _ := c.ParamsInt("ID")
+	if err := h.deleteValidator(ID); err != nil {
+		return fctx.BadRequest(err)
+	}
+	del{{.Name|Upper}}, err := h.{{.Name|Upper}}Service.Delete(ctx, ID)
+	if err != nil {
+		return fctx.Conflict(err)
+	}
+	resp := {{.Name}}DomainTo{{.Name|Upper}}DeleteResponseDtoMapper(del{{.Name|Upper}})
+	return fctx.ResponseOk(resp.Payload)
+}
