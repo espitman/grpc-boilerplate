@@ -5,7 +5,9 @@ type {{.HTTPInfo.Name}}Dto struct {
 	Name string `json:"name" validate:"required"`
 }
 
-type {{.HTTPInfo.Name}}CreateRequestDto {{.HTTPInfo.Name}}Dto
+type {{.HTTPInfo.Name}}CreateRequestDto struct {
+    Name string `json:"name" validate:"required"`
+}
 
 type {{.HTTPInfo.Name}}GetResponseDto struct {
 	ResponseDto

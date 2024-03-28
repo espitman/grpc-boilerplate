@@ -6,7 +6,6 @@ import (
 
 func {{.Domain}}CreateRequestDtoTo{{.Domain|Upper}}DomainMapper(dto {{.Domain}}CreateRequestDto) domain.{{.Domain|Upper}} {
 	return domain.{{.Domain|Upper}}{
-		ID:    	dto.ID,
 		Name:   dto.Name,
 	}
 }

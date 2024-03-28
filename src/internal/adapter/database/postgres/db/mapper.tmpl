@@ -7,7 +7,8 @@ import (
 
 func {{.Domain}}SchemaTo{{.Domain|Upper}}DomainPointerMapper(c *ent.{{.Domain|Upper}}) *domain.{{.Domain|Upper}} {
 	return &domain.{{.Domain|Upper}}{
-		Name:            c.Name,
+    ID:     c.ID,
+    Name:   c.Name,
 	}
 }
 
