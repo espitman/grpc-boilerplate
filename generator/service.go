@@ -83,6 +83,8 @@ func (m *MainService) generate() {
 	m.generateDB()
 
 	m.generateMainFile()
+
+	m.generateSwagger()
 	m.createYaml()
 }
 
@@ -231,12 +233,10 @@ func (m *MainService) generatePostgreSQL() {
 }
 
 func (m *MainService) generatePostgresEnt() error {
-	//cmd := "cd " + m.Dist + "/internal/adapter/database/postgres/ && go run -mod=mod entgo.io/ent/cmd/ent new " + gutil.Upper(m.Domain)
-	//sh.RunV("sh", "-c", cmd)
 	gutil.Render("../src/internal/adapter/database/postgres/ent/schema/schema.tmpl", m.Dist+"/internal/adapter/database/postgres/ent/schema/"+m.Domain+".go", m)
 
-	cmd2 := "go generate " + m.Dist + "/internal/adapter/database/postgres/ent"
-	sh.RunV("sh", "-c", cmd2)
+	cmd := "go generate " + m.Dist + "/internal/adapter/database/postgres/ent"
+	sh.RunV("sh", "-c", cmd)
 
 	gutil.ReplaceImportPath(m.Dist+"/internal/adapter/database/postgres/ent", m.Name, m.Module)
 	return nil
@@ -244,6 +244,11 @@ func (m *MainService) generatePostgresEnt() error {
 
 func (m *MainService) generateMongoDB() {
 	// TODO: mongoDB
+}
+
+func (m *MainService) generateSwagger() {
+	cmd := "swag init -g " + m.Dist + "/cmd/api/api.go -o " + m.Dist + "/cmd/api/docs --parseDependency"
+	sh.RunV("sh", "-c", cmd)
 }
 
 func (m *MainService) createYaml() {
