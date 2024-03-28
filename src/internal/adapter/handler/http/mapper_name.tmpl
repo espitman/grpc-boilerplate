@@ -1,0 +1,46 @@
+package http
+
+import (
+	"{{.Module}}/internal/core/domain"
+)
+
+func {{.Domain}}CreateRequestDtoTo{{.Domain|Upper}}DomainMapper(dto {{.Domain}}CreateRequestDto) domain.{{.Domain|Upper}} {
+	return domain.{{.Domain|Upper}}{
+		Name:   dto.Name,
+	}
+}
+
+func {{.Domain}}DomainTo{{.Domain|Upper}}GetResponseDtoMapper(d *domain.{{.Domain|Upper}}) {{.Domain}}GetResponseDto {
+	var resp {{.Domain}}GetResponseDto
+	resp.Payload.{{.Domain|Upper}} = {{.Domain}}Dto{
+		ID:   d.ID,
+		Name:	d.Name,
+	}
+	return resp
+}
+
+
+func {{.Name}}UpdateRequestDtoTo{{.Name|Upper}}DomainMapper(dto {{.Name}}UpdateRequestDto) domain.{{.Name|Upper}} {
+	return domain.{{.Name|Upper}}{
+		Name: dto.Name,
+	}
+}
+
+func {{.Name}}DomainTo{{.Name|Upper}}UpdateResponseDtoMapper(d *domain.{{.Name|Upper}}) {{.Name}}UpdateResponseDto {
+	var resp {{.Name}}UpdateResponseDto
+	resp.Payload.{{.Name|Upper}} = {{.Name}}Dto{
+		ID:   d.ID,
+		Name: d.Name,
+	}
+	return resp
+}
+
+func {{.Name}}DomainTo{{.Name|Upper}}DeleteResponseDtoMapper(d *domain.{{.Name|Upper}}) {{.Name}}DeleteResponseDto {
+	var resp {{.Name}}DeleteResponseDto
+	resp.Payload.{{.Name|Upper}} = {{.Name}}Dto{
+		ID:   d.ID,
+		Name: d.Name,
+	}
+	return resp
+}
+
