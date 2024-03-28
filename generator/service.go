@@ -85,6 +85,7 @@ func (m *MainService) generate() {
 	m.generateMainFile()
 
 	m.generateSwagger()
+	m.generateConfig()
 	m.createYaml()
 }
 
@@ -247,8 +248,14 @@ func (m *MainService) generateMongoDB() {
 }
 
 func (m *MainService) generateSwagger() {
-	cmd := "swag init -g " + m.Dist + "/cmd/api/api.go -o " + m.Dist + "/cmd/api/docs --parseDependency"
+	dist := strings.ReplaceAll(m.Dist, "../build/", "./build/")
+	cmd := "cd .. && swag init -g " + dist + "/cmd/api/api.go -o " + dist + "/cmd/api/docs --parseDependency"
 	sh.RunV("sh", "-c", cmd)
+}
+
+func (m *MainService) generateConfig() {
+	gutil.CreateDir(m.Dist + "/config")
+	gutil.Render("../src/config/default.json.tmpl", m.Dist+"/config/default.json", m)
 }
 
 func (m *MainService) createYaml() {
