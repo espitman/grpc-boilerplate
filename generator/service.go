@@ -46,11 +46,18 @@ type Repository struct {
 	Domain string `yaml:"domain"`
 }
 
+var buildPath, srcFolder string
+
+func init() {
+	buildPath = "../build"
+	srcFolder = "../src"
+}
+
 func NewMainService() *MainService {
 
 	name := cli.TextInput("Enter Service name:", "", false)
 	module := cli.TextInput("Enter Module path:", "github.com/u/p", false)
-	dist := "../build/" + name
+	dist := buildPath + "/" + name
 
 	m := MainService{
 		Dist:   dist,
@@ -92,7 +99,7 @@ func (m *MainService) generate() {
 }
 
 func (m *MainService) createDirs() {
-	gutil.CreateDir("../build")
+	gutil.CreateDir(buildPath)
 	gutil.CreateDir(m.Dist)
 	gutil.CreateDir(m.Dist + "/.info")
 	gutil.CreateDir(m.Dist + "/cmd")
@@ -108,7 +115,7 @@ func (m *MainService) createDirs() {
 }
 
 func (m *MainService) generateMainFile() {
-	gutil.Render("../src/cmd/main.tmpl", m.Dist+"/cmd/main.go", m)
+	gutil.Render(srcFolder+"/cmd/main.tmpl", m.Dist+"/cmd/main.go", m)
 }
 
 func (m *MainService) getProtocolsInfo() {
@@ -127,7 +134,7 @@ func (m *MainService) getDomainInfo() {
 
 func (m *MainService) generateCore() {
 
-	dist := "../build/" + m.Name + "/internal/core/domain/"
+	dist := buildPath + "/" + m.Name + "/internal/core/domain/"
 
 	d := CoreDomain{
 		Service: *m,
@@ -150,21 +157,21 @@ func (m *MainService) generateApi() {
 	if m.HTTP {
 		//m.getHTTPInfo()
 		gutil.CreateDir(m.Dist + "/cmd/api")
-		gutil.Render("../src/cmd/api/api.tmpl", m.Dist+"/cmd/api/api.go", m)
+		gutil.Render(srcFolder+"/cmd/api/api.tmpl", m.Dist+"/cmd/api/api.go", m)
 
 		gutil.CreateDir(m.Dist + "/internal/adapter/handler/http")
 
-		gutil.Render("../src/internal/adapter/handler/http/dto_global.tmpl", m.Dist+"/internal/adapter/handler/http/dto_global.go", m)
-		gutil.Render("../src/internal/adapter/handler/http/middleware_authorize.tmpl", m.Dist+"/internal/adapter/handler/http/middleware_authorize.go", m)
-		gutil.Render("../src/internal/adapter/handler/http/router.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", m)
-		gutil.Render("../src/internal/adapter/handler/http/server.tmpl", m.Dist+"/internal/adapter/handler/http/server.go", m)
-		gutil.Render("../src/internal/adapter/handler/http/swagger.tmpl", m.Dist+"/internal/adapter/handler/http/swagger.go", m)
+		gutil.Render(srcFolder+"/internal/adapter/handler/http/dto_global.tmpl", m.Dist+"/internal/adapter/handler/http/dto_global.go", m)
+		gutil.Render(srcFolder+"/internal/adapter/handler/http/middleware_authorize.tmpl", m.Dist+"/internal/adapter/handler/http/middleware_authorize.go", m)
+		gutil.Render(srcFolder+"/internal/adapter/handler/http/router.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", m)
+		gutil.Render(srcFolder+"/internal/adapter/handler/http/server.tmpl", m.Dist+"/internal/adapter/handler/http/server.go", m)
+		gutil.Render(srcFolder+"/internal/adapter/handler/http/swagger.tmpl", m.Dist+"/internal/adapter/handler/http/swagger.go", m)
 
-		gutil.Render("../src/internal/adapter/handler/http/dto_name.tmpl", m.Dist+"/internal/adapter/handler/http/dto_"+m.HTTPInfo.Name+".go", m)
-		gutil.Render("../src/internal/adapter/handler/http/handler_name.tmpl", m.Dist+"/internal/adapter/handler/http/handler_"+m.HTTPInfo.Name+".go", m)
-		gutil.Render("../src/internal/adapter/handler/http/mapper_name.tmpl", m.Dist+"/internal/adapter/handler/http/mapper_"+m.HTTPInfo.Name+".go", m)
-		gutil.Render("../src/internal/adapter/handler/http/router_name.tmpl", m.Dist+"/internal/adapter/handler/http/router_"+m.HTTPInfo.Name+".go", m)
-		gutil.Render("../src/internal/adapter/handler/http/validator_name.tmpl", m.Dist+"/internal/adapter/handler/http/validator_"+m.HTTPInfo.Name+".go", m)
+		gutil.Render(srcFolder+"/internal/adapter/handler/http/dto_name.tmpl", m.Dist+"/internal/adapter/handler/http/dto_"+m.HTTPInfo.Name+".go", m)
+		gutil.Render(srcFolder+"/internal/adapter/handler/http/handler_name.tmpl", m.Dist+"/internal/adapter/handler/http/handler_"+m.HTTPInfo.Name+".go", m)
+		gutil.Render(srcFolder+"/internal/adapter/handler/http/mapper_name.tmpl", m.Dist+"/internal/adapter/handler/http/mapper_"+m.HTTPInfo.Name+".go", m)
+		gutil.Render(srcFolder+"/internal/adapter/handler/http/router_name.tmpl", m.Dist+"/internal/adapter/handler/http/router_"+m.HTTPInfo.Name+".go", m)
+		gutil.Render(srcFolder+"/internal/adapter/handler/http/validator_name.tmpl", m.Dist+"/internal/adapter/handler/http/validator_"+m.HTTPInfo.Name+".go", m)
 	}
 
 }
@@ -186,14 +193,14 @@ func (m *MainService) generateGRPC() {
 		m.GRPCInfo.Methods = methods
 
 		gutil.CreateDir(m.Dist + "/cmd/gRPC")
-		gutil.Render("../src/cmd/gRPC/gRPC.tmpl", m.Dist+"/cmd/gRPC/gRPC.go", m)
+		gutil.Render(srcFolder+"/cmd/gRPC/gRPC.tmpl", m.Dist+"/cmd/gRPC/gRPC.go", m)
 
 		gutil.CreateDir(m.Dist + "/internal/adapter/handler/gRPC")
-		gutil.Render("../src/internal/adapter/handler/gRPC/interceptor.tmpl", m.Dist+"/internal/adapter/handler/gRPC/interceptor.go", m)
-		gutil.Render("../src/internal/adapter/handler/gRPC/server.tmpl", m.Dist+"/internal/adapter/handler/gRPC/server.go", m)
-		gutil.Render("../src/internal/adapter/handler/gRPC/handler.tmpl", m.Dist+"/internal/adapter/handler/gRPC/handler.go", m)
+		gutil.Render(srcFolder+"/internal/adapter/handler/gRPC/interceptor.tmpl", m.Dist+"/internal/adapter/handler/gRPC/interceptor.go", m)
+		gutil.Render(srcFolder+"/internal/adapter/handler/gRPC/server.tmpl", m.Dist+"/internal/adapter/handler/gRPC/server.go", m)
+		gutil.Render(srcFolder+"/internal/adapter/handler/gRPC/handler.tmpl", m.Dist+"/internal/adapter/handler/gRPC/handler.go", m)
 
-		gutil.Render("../src/internal/adapter/handler/gRPC/handler_name.tmpl", m.Dist+"/internal/adapter/handler/gRPC/handler_"+m.Domain+".go", m)
+		gutil.Render(srcFolder+"/internal/adapter/handler/gRPC/handler_name.tmpl", m.Dist+"/internal/adapter/handler/gRPC/handler_"+m.Domain+".go", m)
 	}
 }
 
@@ -231,18 +238,18 @@ func (m *MainService) generatePostgreSQL() {
 	gutil.CreateDir(m.Dist + "/internal/adapter/database/postgres/ent")
 	gutil.CreateDir(m.Dist + "/internal/adapter/database/postgres/ent/schema")
 
-	gutil.Render("../src/internal/adapter/database/postgres/db/db.tmpl", m.Dist+"/internal/adapter/database/postgres/db/db.go", m)
-	gutil.Render("../src/internal/adapter/database/postgres/ent/generate.tmpl", m.Dist+"/internal/adapter/database/postgres/ent/generate.go", m)
+	gutil.Render(srcFolder+"/internal/adapter/database/postgres/db/db.tmpl", m.Dist+"/internal/adapter/database/postgres/db/db.go", m)
+	gutil.Render(srcFolder+"/internal/adapter/database/postgres/ent/generate.tmpl", m.Dist+"/internal/adapter/database/postgres/ent/generate.go", m)
 
 	m.generatePostgresEnt()
 
-	gutil.Render("../src/internal/adapter/database/postgres/db/repository.tmpl", m.Dist+"/internal/adapter/database/postgres/db/repository_"+m.Domain+".go", m)
-	gutil.Render("../src/internal/adapter/database/postgres/db/mapper.tmpl", m.Dist+"/internal/adapter/database/postgres/db/mapper_"+m.Domain+".go", m)
+	gutil.Render(srcFolder+"/internal/adapter/database/postgres/db/repository.tmpl", m.Dist+"/internal/adapter/database/postgres/db/repository_"+m.Domain+".go", m)
+	gutil.Render(srcFolder+"/internal/adapter/database/postgres/db/mapper.tmpl", m.Dist+"/internal/adapter/database/postgres/db/mapper_"+m.Domain+".go", m)
 
 }
 
 func (m *MainService) generatePostgresEnt() error {
-	gutil.Render("../src/internal/adapter/database/postgres/ent/schema/schema.tmpl", m.Dist+"/internal/adapter/database/postgres/ent/schema/"+m.Domain+".go", m)
+	gutil.Render(srcFolder+"/internal/adapter/database/postgres/ent/schema/schema.tmpl", m.Dist+"/internal/adapter/database/postgres/ent/schema/"+m.Domain+".go", m)
 
 	cmd := "go generate " + m.Dist + "/internal/adapter/database/postgres/ent"
 	sh.RunV("sh", "-c", cmd)
@@ -257,7 +264,7 @@ func (m *MainService) generateMongoDB() {
 
 func (m *MainService) generateSwagger() {
 	if m.HTTP {
-		dist := strings.ReplaceAll(m.Dist, "../build/", "./build/")
+		dist := strings.ReplaceAll(m.Dist, buildPath+"/", "./build/")
 		cmd := "cd .. && swag init -g " + dist + "/cmd/api/api.go -o " + dist + "/cmd/api/docs --parseDependency"
 		sh.RunV("sh", "-c", cmd)
 	}
@@ -265,7 +272,7 @@ func (m *MainService) generateSwagger() {
 
 func (m *MainService) generateConfig() {
 	gutil.CreateDir(m.Dist + "/config")
-	gutil.Render("../src/config/default.json.tmpl", m.Dist+"/config/default.json", m)
+	gutil.Render(srcFolder+"/config/default.json.tmpl", m.Dist+"/config/default.json", m)
 }
 
 func (m *MainService) createYaml() {
@@ -275,6 +282,6 @@ func (m *MainService) createYaml() {
 func (Build) Service() error {
 	m := NewMainService()
 	m.generate()
-	//fmt.Println(m)
+	////fmt.Println(m)
 	return nil
 }
