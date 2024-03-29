@@ -1,12 +1,16 @@
 {
   "app": {
-    "name": "{{.Name}}",
+    {{- if .HTTP }}
     "http": {
       "port": "3000"
     },
+    {{- end }}
+    {{- if .GRPC }}
     "grpc": {
       "port": "8080"
-    }
+    },
+    {{- end }}
+    "name": "{{.Name}}"
   },
   "db": {
     "postgres": {
