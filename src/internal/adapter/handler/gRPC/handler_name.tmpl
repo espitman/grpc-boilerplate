@@ -2,61 +2,12 @@ package grpc
 
 import (
 	"context"
-	"{{.Module}}/internal/core/domain"
-	{{.Domain}}pb "{{.GRPCInfo.PBModule}}"
+	pb "{{.GRPCInfo.PBModule}}"
 )
 
-func (h Handler) V1{{.Domain|Upper}}Get(ctx context.Context, req *{{.Domain}}pb.V1{{.Domain|Upper}}GetRequest) (*{{.Domain}}pb.V1{{.Domain|Upper}}GetResponse, error) {
-	{{.Domain}}, err := h.{{.Domain}}Service.Get(ctx, int(req.Id))
-	if err != nil {
-		return nil, err
-	}
-	resp := {{.Domain}}pb.V1{{.Domain|Upper}}GetResponse{
-		Id:   int32({{.Domain}}.ID),
-		Name: {{.Domain}}.Name,
-	}
+{{ range .GRPCInfo.Methods}}
+func (h Handler) {{.Name}}(ctx context.Context, req *pb.{{.InputType}}) (*pb.{{.OutputType}}, error) {
+	resp := pb.{{.OutputType}}{}
 	return &resp, nil
 }
-
-func (h Handler) V1{{.Domain|Upper}}Create(ctx context.Context, req *{{.Domain}}pb.V1{{.Domain|Upper}}CreateRequest) (*{{.Domain}}pb.V1{{.Domain|Upper}}CreateResponse, error) {
-	new{{.Domain|Upper}} := domain.{{.Domain|Upper}}{
-		Name: req.Name,
-	}
-	{{.Domain}}, err := h.{{.Domain}}Service.Crete(ctx, new{{.Domain|Upper}})
-	if err != nil {
-		return nil, err
-	}
-	resp := {{.Domain}}pb.V1{{.Domain|Upper}}CreateResponse{
-		Id:   int32({{.Domain}}.ID),
-		Name: {{.Domain}}.Name,
-	}
-	return &resp, nil
-}
-
-func (h Handler) V1{{.Domain|Upper}}Update(ctx context.Context, req *{{.Domain}}pb.V1{{.Domain|Upper}}UpdateRequest) (*{{.Domain}}pb.V1{{.Domain|Upper}}UpdateResponse, error) {
-	new{{.Domain|Upper}} := domain.{{.Domain|Upper}}{
-		ID:   int(req.Id),
-		Name: req.Name,
-	}
-	{{.Domain}}, err := h.{{.Domain}}Service.Update(ctx, int(req.Id), new{{.Domain|Upper}})
-	if err != nil {
-		return nil, err
-	}
-	resp := {{.Domain}}pb.V1{{.Domain|Upper}}UpdateResponse{
-		Id:   int32({{.Domain}}.ID),
-		Name: {{.Domain}}.Name,
-	}
-	return &resp, nil
-}
-
-func (h Handler) V1{{.Domain|Upper}}Delete(ctx context.Context, req *{{.Domain}}pb.V1{{.Domain|Upper}}DeleteRequest) (*{{.Domain}}pb.V1{{.Domain|Upper}}DeleteResponse, error) {
-	{{.Domain}}, err := h.{{.Domain}}Service.Delete(ctx, int(req.Id))
-	if err != nil {
-		return nil, err
-	}
-	resp := {{.Domain}}pb.V1{{.Domain|Upper}}DeleteResponse{
-		Id:   int32({{.Domain}}.ID),
-		Name: {{.Domain}}.Name,
-	}
-	return &resp, nil
-}
+{{ end }}

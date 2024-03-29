@@ -25,7 +25,9 @@ type MainService struct {
 }
 
 type GRPCInfo struct {
-	PBModule string `yaml:"PBModule"`
+	ProtoPath string         `yaml:"ProtoPath"`
+	PBModule  string         `yaml:"PBModule"`
+	Methods   []gutil.Method `yaml:"-"`
 }
 
 type HTTPInfo struct {
@@ -177,7 +179,10 @@ func (m *MainService) getHTTPInfo() {
 
 func (m *MainService) generateGRPC() {
 	if m.GRPC {
-		//m.getGRPCInfo()
+
+		m.GRPCInfo.PBModule = gutil.ExtractGoPackage(m.GRPCInfo.ProtoPath)
+		methods, _ := gutil.ExtractGRPCMethods(m.GRPCInfo.ProtoPath)
+		m.GRPCInfo.Methods = methods
 
 		gutil.CreateDir(m.Dist + "/cmd/gRPC")
 		gutil.Render("../src/cmd/gRPC/gRPC.tmpl", m.Dist+"/cmd/gRPC/gRPC.go", m)
@@ -186,13 +191,14 @@ func (m *MainService) generateGRPC() {
 		gutil.Render("../src/internal/adapter/handler/gRPC/interceptor.tmpl", m.Dist+"/internal/adapter/handler/gRPC/interceptor.go", m)
 		gutil.Render("../src/internal/adapter/handler/gRPC/server.tmpl", m.Dist+"/internal/adapter/handler/gRPC/server.go", m)
 		gutil.Render("../src/internal/adapter/handler/gRPC/handler.tmpl", m.Dist+"/internal/adapter/handler/gRPC/handler.go", m)
+
 		gutil.Render("../src/internal/adapter/handler/gRPC/handler_name.tmpl", m.Dist+"/internal/adapter/handler/gRPC/handler_"+m.Domain+".go", m)
 	}
 }
 
 func (m *MainService) getGRPCInfo() {
-	path := cli.TextInput("Enter Proto path:", "git.alibaba.ir/taraaz/salvation2/monorepo/pkg/protos/protogen/price_service", false)
-	m.GRPCInfo.PBModule = path
+	path := cli.TextInput("Enter Proto file path:", "*/*.proto", false)
+	m.GRPCInfo.ProtoPath = path
 }
 
 func (m *MainService) getDBInfo() {
