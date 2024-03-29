@@ -92,6 +92,7 @@ func (m *MainService) generate() {
 }
 
 func (m *MainService) createDirs() {
+	gutil.CreateDir("../build")
 	gutil.CreateDir(m.Dist)
 	gutil.CreateDir(m.Dist + "/.info")
 	gutil.CreateDir(m.Dist + "/cmd")

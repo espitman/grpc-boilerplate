@@ -11,11 +11,13 @@ import (
 )
 
 type Server struct {
+    port     string
 	validate *validator.Validate
 	handler  *Handler
 }
 
 func NewServer(
+    port string,
 	validate *validator.Validate,
 	{{.Domain}}Service port.{{.Domain|Upper}}Service,
 ) *Server {
@@ -24,6 +26,7 @@ func NewServer(
 	{{.Domain}}Service,
 	)
 	return &Server{
+	    port:     port,
 		validate: validate,
 		handler:  handler,
 	}
@@ -34,11 +37,11 @@ func (s Server) registerServers(gs *grpc.Server) {
 }
 
 func (s Server) Run() {
-	listener, err := net.Listen("tcp", "localhost:8080")
+	listener, err := net.Listen("tcp", "localhost:"+s.port)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("starting server:8080")
+	fmt.Println("starting server:" + s.port)
 	gs := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
 			s.ValidateInterceptor(),

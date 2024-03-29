@@ -11,6 +11,7 @@ func Run(
 	{{.Domain}}Service port.{{.Domain|Upper}}Service,
 ) {
 	gRPC := grpc.NewServer(
+	    superConf.Get("app.grpc.port"),
 	    validate,
 	    {{.Domain}}Service,
 	)
