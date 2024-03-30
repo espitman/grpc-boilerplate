@@ -49,3 +49,19 @@ func ExtractGoPackage(protoFilePath string) string {
 
 	return match[1]
 }
+
+func ExtractServiceName(protoFilePath string) string {
+	protoContent, err := ioutil.ReadFile(protoFilePath)
+	if err != nil {
+		return ""
+	}
+
+	regex := regexp.MustCompile(`service\s+(\w+)\s*{`)
+	match := regex.FindStringSubmatch(string(protoContent))
+	if len(match) < 2 {
+		return ""
+	}
+
+	serviceName := match[1]
+	return serviceName
+}

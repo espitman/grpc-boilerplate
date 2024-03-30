@@ -27,6 +27,7 @@ type MainService struct {
 type GRPCInfo struct {
 	ProtoPath string          `yaml:"ProtoPath"`
 	PBModule  string          `yaml:"PBModule"`
+	Service   string          `yaml:"Service"`
 	Methods   []gutil2.Method `yaml:"-"`
 }
 
@@ -189,6 +190,8 @@ func (m *MainService) generateGRPC() {
 	if m.GRPC {
 
 		m.GRPCInfo.PBModule = gutil2.ExtractGoPackage(m.GRPCInfo.ProtoPath)
+		m.GRPCInfo.Service = gutil2.ExtractServiceName(m.GRPCInfo.ProtoPath)
+
 		methods, _ := gutil2.ExtractGRPCMethods(m.GRPCInfo.ProtoPath)
 		m.GRPCInfo.Methods = methods
 
