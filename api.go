@@ -38,6 +38,7 @@ func appendToRouterFile(m MainService) {
 	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/router-router-type.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", "RouterType", m)
 	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/router-new-router-type.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", "NewRouterType", m)
 	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/router-router-handler.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", "RouterHandler", m)
+	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/router-router-serve.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", "RouterServe", m)
 	sh.RunV("gofmt", "-w", m.Dist+"/internal/adapter/handler/http/router.go")
 }
 

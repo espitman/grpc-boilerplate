@@ -27,4 +27,5 @@ func (r *Router) serve(app *fiber.App) {
 
 	r.swaggerRouter()
 	r.{{.HTTPInfo.Name}}V1Router(v1)
+	// +salvation RouterServe
 }
