@@ -51,7 +51,7 @@ var buildPath, srcFolder string
 
 func init() {
 	buildPath = "./"
-	srcFolder = "./src"
+	srcFolder = "./src/service"
 }
 
 func NewMainService() *MainService {
