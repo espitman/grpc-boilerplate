@@ -10,43 +10,43 @@ import (
 )
 
 func appendToMainFile(m MainService) {
-	gutil.AppendToFile(srcFolder+"/cmd/main-new-repository.tmpl", m.Dist+"/cmd/main.go", "NewRepository", m)
+	gutil.AppendToFile(fs, srcFolder+"/cmd/main-new-repository.tmpl", m.Dist+"/cmd/main.go", "NewRepository", m)
 	sh.RunV("gofmt", "-w", m.Dist+"/cmd/main.go")
 }
 
 func appendToMainFileAPI(m MainService) {
-	gutil.AppendToFile(srcFolder+"/cmd/main-run-service-api.tmpl", m.Dist+"/cmd/main.go", "RunServiceAPI", m)
+	gutil.AppendToFile(fs, srcFolder+"/cmd/main-run-service-api.tmpl", m.Dist+"/cmd/main.go", "RunServiceAPI", m)
 	sh.RunV("gofmt", "-w", m.Dist+"/cmd/main.go")
 }
 
 func appendToAPiFile(m MainService) {
-	gutil.AppendToFile(srcFolder+"/cmd/api/api-run-type.tmpl", m.Dist+"/cmd/api/api.go", "RunType", m)
+	gutil.AppendToFile(fs, srcFolder+"/cmd/api/api-run-type.tmpl", m.Dist+"/cmd/api/api.go", "RunType", m)
 	sh.RunV("gofmt", "-w", m.Dist+"/cmd/api/api.go")
 }
 
 func appendToMainFileGRPC(m MainService) {
-	gutil.AppendToFile(srcFolder+"/cmd/main-run-service-grpc.tmpl", m.Dist+"/cmd/main.go", "RunServiceGRPC", m)
+	gutil.AppendToFile(fs, srcFolder+"/cmd/main-run-service-grpc.tmpl", m.Dist+"/cmd/main.go", "RunServiceGRPC", m)
 	sh.RunV("gofmt", "-w", m.Dist+"/cmd/main.go")
 
 }
 
 func appendToGRPCFile(m MainService) {
-	gutil.AppendToFile(srcFolder+"/cmd/gRPC/gRPC-run.tmpl", m.Dist+"/cmd/gRPC/gRPC.go", "Run", m)
-	gutil.AppendToFile(srcFolder+"/cmd/gRPC/gRPC-run-service.tmpl", m.Dist+"/cmd/gRPC/gRPC.go", "RunService", m)
+	gutil.AppendToFile(fs, srcFolder+"/cmd/gRPC/gRPC-run.tmpl", m.Dist+"/cmd/gRPC/gRPC.go", "Run", m)
+	gutil.AppendToFile(fs, srcFolder+"/cmd/gRPC/gRPC-run-service.tmpl", m.Dist+"/cmd/gRPC/gRPC.go", "RunService", m)
 	sh.RunV("gofmt", "-w", m.Dist+"/cmd/gRPC/gRPC.go")
 
 }
 
 func appendToServerFileGRPC(m MainService) {
-	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/gRPC/server-new-server.tmpl", m.Dist+"/internal/adapter/handler/gRPC/server.go", "NewServer", m)
-	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/gRPC/server-new-handler.tmpl", m.Dist+"/internal/adapter/handler/gRPC/server.go", "NewHandler", m)
+	gutil.AppendToFile(fs, srcFolder+"/internal/adapter/handler/gRPC/server-new-server.tmpl", m.Dist+"/internal/adapter/handler/gRPC/server.go", "NewServer", m)
+	gutil.AppendToFile(fs, srcFolder+"/internal/adapter/handler/gRPC/server-new-handler.tmpl", m.Dist+"/internal/adapter/handler/gRPC/server.go", "NewHandler", m)
 	sh.RunV("gofmt", "-w", m.Dist+"/internal/adapter/handler/gRPC/server.go")
 }
 
 func appendToHandlerFileGRPC(m MainService) {
-	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/gRPC/handler-handler.tmpl", m.Dist+"/internal/adapter/handler/gRPC/handler.go", "Handler", m)
-	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/gRPC/handler-new-handler-type.tmpl", m.Dist+"/internal/adapter/handler/gRPC/handler.go", "NewHandlerType", m)
-	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/gRPC/handler-new-handler-service.tmpl", m.Dist+"/internal/adapter/handler/gRPC/handler.go", "NewHandlerService", m)
+	gutil.AppendToFile(fs, srcFolder+"/internal/adapter/handler/gRPC/handler-handler.tmpl", m.Dist+"/internal/adapter/handler/gRPC/handler.go", "Handler", m)
+	gutil.AppendToFile(fs, srcFolder+"/internal/adapter/handler/gRPC/handler-new-handler-type.tmpl", m.Dist+"/internal/adapter/handler/gRPC/handler.go", "NewHandlerType", m)
+	gutil.AppendToFile(fs, srcFolder+"/internal/adapter/handler/gRPC/handler-new-handler-service.tmpl", m.Dist+"/internal/adapter/handler/gRPC/handler.go", "NewHandlerService", m)
 	sh.RunV("gofmt", "-w", m.Dist+"/internal/adapter/handler/gRPC/handler.go")
 
 }

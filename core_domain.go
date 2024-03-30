@@ -37,7 +37,7 @@ func NewCoreDomain() (*CoreDomain, string, string) {
 }
 
 func (m *CoreDomain) create() {
-	gutil2.Render(srcFolder+"/internal/core/domain/domain.tmpl", m.Dist+m.Name+".go", m)
+	gutil2.Render(fs, srcFolder+"/internal/core/domain/domain.tmpl", m.Dist+m.Name+".go", m)
 }
 
 func (Core) Domain() error {

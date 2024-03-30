@@ -2,9 +2,11 @@ package gutil
 
 import (
 	"bytes"
+	"embed"
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"text/template"
@@ -17,10 +19,18 @@ var funcMap = template.FuncMap{
 	"ModulePath": GetModulePath,
 }
 
-func Render(tmplFile string, outputFile string, data any) {
+func Render(fs embed.FS, tmplFile string, outputFile string, data any) {
+
+	tmplFile = strings.Replace(tmplFile, "./src", "src", 1)
+
+	content, err := fs.ReadFile(tmplFile)
+	if err != nil {
+		fmt.Println("Error parsing template:", err)
+		os.Exit(1)
+	}
 
 	var buffer bytes.Buffer
-	tmpl, err := template.New(filepath.Base(tmplFile)).Funcs(funcMap).ParseFiles(tmplFile)
+	tmpl, err := template.New(filepath.Base(tmplFile)).Funcs(funcMap).Parse(string(content))
 	if err != nil {
 		fmt.Println("Error parsing template:", err)
 		os.Exit(1)
@@ -41,7 +51,10 @@ func Render(tmplFile string, outputFile string, data any) {
 }
 
 func ReplaceImportPath(dir string, serviceName string, newImportPath string) error {
-	oldImportPath := "github.com/espitman/grpc-boilerplate/" + serviceName
+
+	//oldImportPath := "github.com/espitman/grpc-boilerplate/" + serviceName
+	moduleName, _ := GetModuleName()
+	oldImportPath := moduleName + "/" + serviceName
 
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -66,15 +79,22 @@ func ReplaceImportPath(dir string, serviceName string, newImportPath string) err
 	return nil
 }
 
-func AppendToFile(templateFilePath string, goFilePath string, comment string, data any) error {
+func AppendToFile(fs embed.FS, templateFilePath string, goFilePath string, comment string, data any) error {
 	comment = "// +salvation " + comment
+	templateFilePath = strings.Replace(templateFilePath, "./src", "src", 1)
+
+	content, err := fs.ReadFile(templateFilePath)
+	if err != nil {
+		fmt.Println("Error parsing template:", err)
+		os.Exit(1)
+	}
 
 	goFileContent, err := ioutil.ReadFile(goFilePath)
 	if err != nil {
 		return err
 	}
 	var buffer bytes.Buffer
-	tmpl, err := template.New(filepath.Base(templateFilePath)).Funcs(funcMap).ParseFiles(templateFilePath)
+	tmpl, err := template.New(filepath.Base(templateFilePath)).Funcs(funcMap).Parse(string(content))
 	if err != nil {
 		fmt.Println("Error parsing template:", err)
 		os.Exit(1)
@@ -108,4 +128,15 @@ func replaceInFile(filePath, oldStr, newStr string) error {
 	}
 
 	return nil
+}
+
+func GetModuleName() (string, error) {
+	cmd := exec.Command("go", "list", "-m")
+	output, err := cmd.Output()
+	if err != nil {
+		return "", fmt.Errorf("failed to execute 'go list' command: %v", err)
+	}
+
+	moduleName := strings.TrimSpace(string(output))
+	return moduleName, nil
 }

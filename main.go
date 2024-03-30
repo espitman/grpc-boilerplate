@@ -2,6 +2,12 @@
 
 package main
 
-import "github.com/magefile/mage/mg"
+import (
+	"embed"
+	"github.com/magefile/mage/mg"
+)
 
 type Build mg.Namespace
+
+//go:embed src/*
+var fs embed.FS

@@ -14,24 +14,24 @@ import (
 type Api mg.Namespace
 
 func appendToServerFile(m MainService) {
-	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/server-server-type.tmpl", m.Dist+"/internal/adapter/handler/http/server.go", "ServerType", m)
-	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/server-new-server-type.tmpl", m.Dist+"/internal/adapter/handler/http/server.go", "NewServerType", m)
-	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/server-server-handler.tmpl", m.Dist+"/internal/adapter/handler/http/server.go", "ServerHandler", m)
-	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/server-router-run.tmpl", m.Dist+"/internal/adapter/handler/http/server.go", "RouterRun", m)
+	gutil.AppendToFile(fs, srcFolder+"/internal/adapter/handler/http/server-server-type.tmpl", m.Dist+"/internal/adapter/handler/http/server.go", "ServerType", m)
+	gutil.AppendToFile(fs, srcFolder+"/internal/adapter/handler/http/server-new-server-type.tmpl", m.Dist+"/internal/adapter/handler/http/server.go", "NewServerType", m)
+	gutil.AppendToFile(fs, srcFolder+"/internal/adapter/handler/http/server-server-handler.tmpl", m.Dist+"/internal/adapter/handler/http/server.go", "ServerHandler", m)
+	gutil.AppendToFile(fs, srcFolder+"/internal/adapter/handler/http/server-router-run.tmpl", m.Dist+"/internal/adapter/handler/http/server.go", "RouterRun", m)
 	sh.RunV("gofmt", "-w", m.Dist+"/internal/adapter/handler/http/server.go")
 }
 
 func appendToRouterFile(m MainService) {
-	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/router-router-type.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", "RouterType", m)
-	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/router-new-router-type.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", "NewRouterType", m)
-	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/router-router-handler.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", "RouterHandler", m)
-	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/router-router-serve.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", "RouterServe", m)
+	gutil.AppendToFile(fs, srcFolder+"/internal/adapter/handler/http/router-router-type.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", "RouterType", m)
+	gutil.AppendToFile(fs, srcFolder+"/internal/adapter/handler/http/router-new-router-type.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", "NewRouterType", m)
+	gutil.AppendToFile(fs, srcFolder+"/internal/adapter/handler/http/router-router-handler.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", "RouterHandler", m)
+	gutil.AppendToFile(fs, srcFolder+"/internal/adapter/handler/http/router-router-serve.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", "RouterServe", m)
 	sh.RunV("gofmt", "-w", m.Dist+"/internal/adapter/handler/http/router.go")
 }
 
 func appendToAPiFileHandler(m MainService) {
-	gutil.AppendToFile(srcFolder+"/cmd/api/api-new-handler.tmpl", m.Dist+"/cmd/api/api.go", "NewHandler", m)
-	gutil.AppendToFile(srcFolder+"/cmd/api/api-new-server-handler.tmpl", m.Dist+"/cmd/api/api.go", "NewServerHandler", m)
+	gutil.AppendToFile(fs, srcFolder+"/cmd/api/api-new-handler.tmpl", m.Dist+"/cmd/api/api.go", "NewHandler", m)
+	gutil.AppendToFile(fs, srcFolder+"/cmd/api/api-new-server-handler.tmpl", m.Dist+"/cmd/api/api.go", "NewServerHandler", m)
 	sh.RunV("gofmt", "-w", m.Dist+"/cmd/api/api.go")
 }
 
@@ -59,11 +59,11 @@ func (Api) Add() error {
 	appendToServerFile(m)
 	appendToAPiFileHandler(m)
 
-	gutil.Render(srcFolder+"/internal/adapter/handler/http/dto_name.tmpl", m.Dist+"/internal/adapter/handler/http/dto_"+m.HTTPInfo.Name+".go", m)
-	gutil.Render(srcFolder+"/internal/adapter/handler/http/handler_name.tmpl", m.Dist+"/internal/adapter/handler/http/handler_"+m.HTTPInfo.Name+".go", m)
-	gutil.Render(srcFolder+"/internal/adapter/handler/http/mapper_name.tmpl", m.Dist+"/internal/adapter/handler/http/mapper_"+m.HTTPInfo.Name+".go", m)
-	gutil.Render(srcFolder+"/internal/adapter/handler/http/router_name.tmpl", m.Dist+"/internal/adapter/handler/http/router_"+m.HTTPInfo.Name+".go", m)
-	gutil.Render(srcFolder+"/internal/adapter/handler/http/validator_name.tmpl", m.Dist+"/internal/adapter/handler/http/validator_"+m.HTTPInfo.Name+".go", m)
+	gutil.Render(fs, srcFolder+"/internal/adapter/handler/http/dto_name.tmpl", m.Dist+"/internal/adapter/handler/http/dto_"+m.HTTPInfo.Name+".go", m)
+	gutil.Render(fs, srcFolder+"/internal/adapter/handler/http/handler_name.tmpl", m.Dist+"/internal/adapter/handler/http/handler_"+m.HTTPInfo.Name+".go", m)
+	gutil.Render(fs, srcFolder+"/internal/adapter/handler/http/mapper_name.tmpl", m.Dist+"/internal/adapter/handler/http/mapper_"+m.HTTPInfo.Name+".go", m)
+	gutil.Render(fs, srcFolder+"/internal/adapter/handler/http/router_name.tmpl", m.Dist+"/internal/adapter/handler/http/router_"+m.HTTPInfo.Name+".go", m)
+	gutil.Render(fs, srcFolder+"/internal/adapter/handler/http/validator_name.tmpl", m.Dist+"/internal/adapter/handler/http/validator_"+m.HTTPInfo.Name+".go", m)
 
 	return nil
 }

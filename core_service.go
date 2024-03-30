@@ -32,7 +32,7 @@ func NewCoreService() *CoreService {
 }
 
 func (m *CoreService) create() {
-	gutil2.Render(srcFolder+"/internal/core/service/service.tmpl", m.Dist+m.Name+".go", m)
+	gutil2.Render(fs, srcFolder+"/internal/core/service/service.tmpl", m.Dist+m.Name+".go", m)
 }
 
 func (Core) Service() error {
