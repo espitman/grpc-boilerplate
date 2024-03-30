@@ -18,7 +18,7 @@ type CoreDomain struct {
 	Dist    string
 }
 
-func NewCoreDomain() *CoreDomain {
+func NewCoreDomain() (*CoreDomain, string, string) {
 	servicePath := cli.TextInput("Enter Main Service path:", "./service-name", false)
 	var mainService MainService
 	gutil2.YamlReader(servicePath+"/.info/service.yaml", &mainService)
@@ -27,10 +27,12 @@ func NewCoreDomain() *CoreDomain {
 	dist := "./" + mainService.Name + "/internal/core/domain/"
 
 	return &CoreDomain{
-		Service: mainService,
-		Name:    name,
-		Dist:    dist,
-	}
+			Service: mainService,
+			Name:    name,
+			Dist:    dist,
+		},
+		servicePath,
+		name
 
 }
 
@@ -39,7 +41,7 @@ func (m *CoreDomain) create() {
 }
 
 func (Core) Domain() error {
-	m := NewCoreDomain()
+	m, _, _ := NewCoreDomain()
 	fmt.Println(m.Service.Name)
 	m.create()
 	return nil

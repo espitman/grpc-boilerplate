@@ -13,19 +13,6 @@ import (
 
 type Api mg.Namespace
 
-func appendToMainFile(m MainService) {
-	gutil.AppendToFile(srcFolder+"/cmd/main-new-repository.tmpl", m.Dist+"/cmd/main.go", "NewRepository", m)
-	gutil.AppendToFile(srcFolder+"/cmd/main-run-service.tmpl", m.Dist+"/cmd/main.go", "RunService", m)
-	sh.RunV("gofmt", "-w", m.Dist+"/cmd/main.go")
-}
-
-func appendToAPiFile(m MainService) {
-	gutil.AppendToFile(srcFolder+"/cmd/api/api-run-type.tmpl", m.Dist+"/cmd/api/api.go", "RunType", m)
-	gutil.AppendToFile(srcFolder+"/cmd/api/api-new-handler.tmpl", m.Dist+"/cmd/api/api.go", "NewHandler", m)
-	gutil.AppendToFile(srcFolder+"/cmd/api/api-new-server-handler.tmpl", m.Dist+"/cmd/api/api.go", "NewServerHandler", m)
-	sh.RunV("gofmt", "-w", m.Dist+"/cmd/api/api.go")
-}
-
 func appendToServerFile(m MainService) {
 	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/server-server-type.tmpl", m.Dist+"/internal/adapter/handler/http/server.go", "ServerType", m)
 	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/server-new-server-type.tmpl", m.Dist+"/internal/adapter/handler/http/server.go", "NewServerType", m)
@@ -40,6 +27,12 @@ func appendToRouterFile(m MainService) {
 	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/router-router-handler.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", "RouterHandler", m)
 	gutil.AppendToFile(srcFolder+"/internal/adapter/handler/http/router-router-serve.tmpl", m.Dist+"/internal/adapter/handler/http/router.go", "RouterServe", m)
 	sh.RunV("gofmt", "-w", m.Dist+"/internal/adapter/handler/http/router.go")
+}
+
+func appendToAPiFileHandler(m MainService) {
+	gutil.AppendToFile(srcFolder+"/cmd/api/api-new-handler.tmpl", m.Dist+"/cmd/api/api.go", "NewHandler", m)
+	gutil.AppendToFile(srcFolder+"/cmd/api/api-new-server-handler.tmpl", m.Dist+"/cmd/api/api.go", "NewServerHandler", m)
+	sh.RunV("gofmt", "-w", m.Dist+"/cmd/api/api.go")
 }
 
 func (Api) Add() error {
@@ -64,8 +57,7 @@ func (Api) Add() error {
 
 	appendToRouterFile(m)
 	appendToServerFile(m)
-	appendToAPiFile(m)
-	appendToMainFile(m)
+	appendToAPiFileHandler(m)
 
 	gutil.Render(srcFolder+"/internal/adapter/handler/http/dto_name.tmpl", m.Dist+"/internal/adapter/handler/http/dto_"+m.HTTPInfo.Name+".go", m)
 	gutil.Render(srcFolder+"/internal/adapter/handler/http/handler_name.tmpl", m.Dist+"/internal/adapter/handler/http/handler_"+m.HTTPInfo.Name+".go", m)
