@@ -37,11 +37,13 @@ func main() {
     go gRPC.Run(
     validate,
         {{.Domain}}Service,
+        // +salvation RunServiceGRPC
     )
     {{- else}}
     gRPC.Run(
         validate,
         {{.Domain}}Service,
+        // +salvation RunServiceGRPC
     )
     {{- end }}
     {{- end }}
@@ -49,7 +51,7 @@ func main() {
 	api.Run(
 	    validate,
 	    {{.Domain}}Service,
-	    // +salvation RunService
+	    // +salvation RunServiceAPI
 	)
 	{{- end }}
 }

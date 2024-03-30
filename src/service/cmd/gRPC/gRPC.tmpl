@@ -10,11 +10,13 @@ import (
 func Run(
 	validate *validator.Validate,
 	{{.Domain}}Service port.{{.Domain|Upper}}Service,
+	// +salvation Run
 ) {
 	gRPC := grpc.NewServer(
 	    superConf.Get("app.grpc.port"),
 	    validate,
 	    {{.Domain}}Service,
+	    // +salvation RunService
 	)
 	gRPC.Run()
 }

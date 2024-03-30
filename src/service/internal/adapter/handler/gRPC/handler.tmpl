@@ -10,14 +10,17 @@ type Handler struct {
 	pb.Unimplemented{{.GRPCInfo.Service|Upper}}Server
 	validate *validator.Validate
 	{{.Domain}}Service port.{{.Domain|Upper}}Service
+	// +salvation Handler
 }
 
 func NewHandler(
 	validate *validator.Validate,
 	{{.Domain}}Service port.{{.Domain|Upper}}Service,
+	// +salvation NewHandlerType
 ) *Handler {
 	return &Handler{
 		validate: validate,
 		{{.Domain}}Service: {{.Domain}}Service,
+		// +salvation NewHandlerService
 	}
 }

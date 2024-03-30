@@ -20,10 +20,12 @@ func NewServer(
     port string,
 	validate *validator.Validate,
 	{{.Domain}}Service port.{{.Domain|Upper}}Service,
+	// +salvation NewServer
 ) *Server {
 	handler := NewHandler(
 	validate,
 	{{.Domain}}Service,
+	// +salvation NewHandler
 	)
 	return &Server{
 	    port:     port,
