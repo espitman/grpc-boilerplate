@@ -7,13 +7,16 @@ import (
 type Router struct {
 	fiberRouter  fiber.Router
 	{{.HTTPInfo.Name}}Handler *{{.HTTPInfo.Name|Upper}}Handler
+	// +salvation RouterType
 }
 
 func newRouter(
 	{{.HTTPInfo.Name}}Handler *{{.HTTPInfo.Name|Upper}}Handler,
+	// +salvation NewRouterType
 ) Router {
 	return Router{
 		{{.HTTPInfo.Name}}Handler: {{.HTTPInfo.Name}}Handler,
+		// +salvation RouterHandler
 	}
 }
 

@@ -21,12 +21,15 @@ import (
 func Run(
 	validate *validator.Validate,
 	{{.Domain}}Service port.{{.Domain|Upper}}Service,
+	 // +salvation RunType
 ) {
     {{.Domain}}Handler := http.New{{.Domain|Upper}}Handler(validate, {{.Domain}}Service)
+    // +salvation NewHandler
 
 	httpServer := http.NewServer(
 		superConf.Get("app.http.port"),
 		{{.Domain}}Handler,
+		// +salvation NewServerHandler
 	)
 	httpServer.Run()
 }

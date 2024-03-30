@@ -1,0 +1,5 @@
+{{.Domain}}Repository := db.New{{.Domain|Upper}}Repository(pgDB.Client)
+{{.Domain}}Service := service.New{{.Domain|Upper}}Service({{.Domain}}Repository)
+
+// +salvation NewRepository
+

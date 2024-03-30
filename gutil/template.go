@@ -10,14 +10,14 @@ import (
 	"text/template"
 )
 
-func Render(tmplFile string, outputFile string, data any) {
+var funcMap = template.FuncMap{
+	"Time":       Time,
+	"Upper":      Upper,
+	"Kebab":      KebabCase,
+	"ModulePath": GetModulePath,
+}
 
-	funcMap := template.FuncMap{
-		"Time":       Time,
-		"Upper":      Upper,
-		"Kebab":      KebabCase,
-		"ModulePath": GetModulePath,
-	}
+func Render(tmplFile string, outputFile string, data any) {
 
 	var buffer bytes.Buffer
 	tmpl, err := template.New(filepath.Base(tmplFile)).Funcs(funcMap).ParseFiles(tmplFile)
@@ -63,6 +63,34 @@ func ReplaceImportPath(dir string, serviceName string, newImportPath string) err
 	}
 
 	fmt.Println("Import path replacement completed successfully.")
+	return nil
+}
+
+func AppendToFile(templateFilePath string, goFilePath string, comment string, data any) error {
+	comment = "// +salvation " + comment
+
+	goFileContent, err := ioutil.ReadFile(goFilePath)
+	if err != nil {
+		return err
+	}
+	var buffer bytes.Buffer
+	tmpl, err := template.New(filepath.Base(templateFilePath)).Funcs(funcMap).ParseFiles(templateFilePath)
+	if err != nil {
+		fmt.Println("Error parsing template:", err)
+		os.Exit(1)
+	}
+	err = tmpl.Execute(&buffer, data)
+	if err != nil {
+		fmt.Println("Error executing template:", err)
+		os.Exit(1)
+	}
+	output := buffer.Bytes()
+	updatedContent := strings.Replace(string(goFileContent), comment, string(output), 1)
+	err = ioutil.WriteFile(goFilePath, []byte(updatedContent), 0644)
+	if err != nil {
+		return err
+	}
+	fmt.Println("::Output written to", goFilePath)
 	return nil
 }
 

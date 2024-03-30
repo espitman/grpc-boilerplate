@@ -30,6 +30,7 @@ func main() {
     {{.Domain}}Repository := db.New{{.Domain|Upper}}Repository(pgDB.Client)
     {{.Domain}}Service := service.New{{.Domain|Upper}}Service({{.Domain}}Repository)
 
+    // +salvation NewRepository
 
 	{{- if .GRPC }}
     {{- if .HTTP }}
@@ -48,6 +49,7 @@ func main() {
 	api.Run(
 	    validate,
 	    {{.Domain}}Service,
+	    // +salvation RunService
 	)
 	{{- end }}
 }
