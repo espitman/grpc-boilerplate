@@ -16,12 +16,12 @@ type CorePort struct {
 }
 
 func NewCorePort() *CorePort {
-	servicePath := cli.TextInput("Enter Main Service path:", "./build/x", false)
+	servicePath := cli.TextInput("Enter Main Service path:", "./service-name", false)
 	var mainService MainService
 	gutil2.YamlReader(servicePath+"/.info/service.yaml", &mainService)
 
 	name := cli.TextInput("Enter Port name:", "", false)
-	dist := "../build/" + mainService.Name + "/internal/core/port/"
+	dist := "./" + mainService.Name + "/internal/core/port/"
 
 	return &CorePort{
 		Service: mainService,

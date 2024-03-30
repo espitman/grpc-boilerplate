@@ -16,12 +16,12 @@ type CoreService struct {
 }
 
 func NewCoreService() *CoreService {
-	servicePath := cli.TextInput("Enter Main Service path:", "./build/x", false)
+	servicePath := cli.TextInput("Enter Main Service path:", "./service-name", false)
 	var mainService MainService
 	gutil2.YamlReader(servicePath+"/.info/service.yaml", &mainService)
 
 	name := cli.TextInput("Enter Service name:", "", false)
-	dist := "../build/" + mainService.Name + "/internal/core/service/"
+	dist := "./" + mainService.Name + "/internal/core/service/"
 
 	return &CoreService{
 		Service: mainService,
