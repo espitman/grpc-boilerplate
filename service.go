@@ -19,9 +19,9 @@ type MainService struct {
 	HTTPInfo   HTTPInfo   `yaml:"HTTPInfo"`
 	GRPC       bool       `yaml:"grpc"`
 	GRPCInfo   GRPCInfo   `yaml:"GRPCInfo"`
-	Domain     string     `yaml:"domain"`
+	Domain     string     `yaml:"-"`
 	DB         DB         `yaml:"DB"`
-	Repository Repository `yaml:"Repository"`
+	Repository Repository `yaml:"-"`
 }
 
 type GRPCInfo struct {

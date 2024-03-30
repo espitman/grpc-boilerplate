@@ -13,6 +13,12 @@ type DB struct {
 	Client *ent.Client
 }
 
+type contextKey string
+
+const (
+	transactionKey contextKey = "tx"
+)
+
 func NewDB(dsn string) *DB {
 	db, err := sql.Open("pgx", dsn)
 	if err != nil {

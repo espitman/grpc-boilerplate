@@ -6,12 +6,6 @@ import (
 	"{{.Module}}/internal/core/domain"
 )
 
-type contextKey string
-
-const (
-	transactionKey contextKey = "tx"
-)
-
 type {{.Domain|Upper}}Repository struct {
 	client *ent.Client
 }
