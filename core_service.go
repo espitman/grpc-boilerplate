@@ -6,7 +6,7 @@ package main
 import (
 	"fmt"
 	"github.com/espitman/go-super-cli"
-	"github.com/espitman/grpc-boilerplate/generator/gutil"
+	gutil2 "github.com/espitman/grpc-boilerplate/gutil"
 )
 
 type CoreService struct {
@@ -18,7 +18,7 @@ type CoreService struct {
 func NewCoreService() *CoreService {
 	servicePath := cli.TextInput("Enter Main Service path:", "./build/x", false)
 	var mainService MainService
-	gutil.YamlReader(servicePath+"/.info/service.yaml", &mainService)
+	gutil2.YamlReader(servicePath+"/.info/service.yaml", &mainService)
 
 	name := cli.TextInput("Enter Service name:", "", false)
 	dist := "../build/" + mainService.Name + "/internal/core/service/"
@@ -32,7 +32,7 @@ func NewCoreService() *CoreService {
 }
 
 func (m *CoreService) create() {
-	gutil.Render(srcFolder+"/internal/core/service/service.tmpl", m.Dist+m.Name+".go", m)
+	gutil2.Render(srcFolder+"/internal/core/service/service.tmpl", m.Dist+m.Name+".go", m)
 }
 
 func (Core) Service() error {

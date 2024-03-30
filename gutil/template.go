@@ -41,7 +41,7 @@ func Render(tmplFile string, outputFile string, data any) {
 }
 
 func ReplaceImportPath(dir string, serviceName string, newImportPath string) error {
-	oldImportPath := "github.com/espitman/grpc-boilerplate/build/" + serviceName
+	oldImportPath := "github.com/espitman/grpc-boilerplate/" + serviceName
 
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {

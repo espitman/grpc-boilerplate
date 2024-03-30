@@ -6,7 +6,7 @@ package main
 import (
 	"fmt"
 	"github.com/espitman/go-super-cli"
-	"github.com/espitman/grpc-boilerplate/generator/gutil"
+	gutil2 "github.com/espitman/grpc-boilerplate/gutil"
 	"github.com/magefile/mage/mg"
 )
 
@@ -21,7 +21,7 @@ type CoreDomain struct {
 func NewCoreDomain() *CoreDomain {
 	servicePath := cli.TextInput("Enter Main Service path:", "./build/x", false)
 	var mainService MainService
-	gutil.YamlReader(servicePath+"/.info/service.yaml", &mainService)
+	gutil2.YamlReader(servicePath+"/.info/service.yaml", &mainService)
 
 	name := cli.TextInput("Enter Domain name:", "", false)
 	dist := "../build/" + mainService.Name + "/internal/core/domain/"
@@ -35,7 +35,7 @@ func NewCoreDomain() *CoreDomain {
 }
 
 func (m *CoreDomain) create() {
-	gutil.Render(srcFolder+"/internal/core/domain/domain.tmpl", m.Dist+m.Name+".go", m)
+	gutil2.Render(srcFolder+"/internal/core/domain/domain.tmpl", m.Dist+m.Name+".go", m)
 }
 
 func (Core) Domain() error {

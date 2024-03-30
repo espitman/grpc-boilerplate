@@ -6,7 +6,7 @@ package main
 import (
 	"fmt"
 	"github.com/espitman/go-super-cli"
-	"github.com/espitman/grpc-boilerplate/generator/gutil"
+	gutil2 "github.com/espitman/grpc-boilerplate/gutil"
 )
 
 type CorePort struct {
@@ -18,7 +18,7 @@ type CorePort struct {
 func NewCorePort() *CorePort {
 	servicePath := cli.TextInput("Enter Main Service path:", "./build/x", false)
 	var mainService MainService
-	gutil.YamlReader(servicePath+"/.info/service.yaml", &mainService)
+	gutil2.YamlReader(servicePath+"/.info/service.yaml", &mainService)
 
 	name := cli.TextInput("Enter Port name:", "", false)
 	dist := "../build/" + mainService.Name + "/internal/core/port/"
@@ -32,8 +32,8 @@ func NewCorePort() *CorePort {
 }
 
 func (m *CorePort) create() {
-	gutil.Render(srcFolder+"/internal/core/port/service.tmpl", m.Dist+"service_"+m.Name+".go", m)
-	gutil.Render(srcFolder+"/internal/core/port/repository.tmpl", m.Dist+"repository_"+m.Name+".go", m)
+	gutil2.Render(srcFolder+"/internal/core/port/service.tmpl", m.Dist+"service_"+m.Name+".go", m)
+	gutil2.Render(srcFolder+"/internal/core/port/repository.tmpl", m.Dist+"repository_"+m.Name+".go", m)
 }
 
 func (Core) Port() error {
