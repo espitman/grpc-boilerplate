@@ -33,7 +33,7 @@ func NewCorePort() *CorePort {
 
 func (m *CorePort) create() {
 	gutil2.Render(fs, srcFolder+"/internal/core/port/service.tmpl", m.Dist+"service_"+m.Name+".go", m)
-	gutil2.Render(fs, srcFolder+"/internal/core/port/repository.tmpl", m.Dist+"repository_"+m.Name+".go", m)
+	gutil2.Render(fs, srcFolder+"/internal/core/port/repository_pg.tmpl", m.Dist+"repository_pg_"+m.Name+".go", m)
 }
 
 func (Core) Port() error {

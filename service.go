@@ -237,17 +237,17 @@ func (m *MainService) generateDB() {
 func (m *MainService) generatePostgreSQL() {
 
 	gutil.CreateDir(m.Dist + "/internal/adapter/database/postgres")
-	gutil.CreateDir(m.Dist + "/internal/adapter/database/postgres/db")
+	gutil.CreateDir(m.Dist + "/internal/adapter/database/postgres/pg")
 	gutil.CreateDir(m.Dist + "/internal/adapter/database/postgres/ent")
 	gutil.CreateDir(m.Dist + "/internal/adapter/database/postgres/ent/schema")
 
-	gutil.Render(fs, srcFolder+"/internal/adapter/database/postgres/db/db.tmpl", m.Dist+"/internal/adapter/database/postgres/db/db.go", m)
+	gutil.Render(fs, srcFolder+"/internal/adapter/database/postgres/pg/db.tmpl", m.Dist+"/internal/adapter/database/postgres/pg/db.go", m)
 	gutil.Render(fs, srcFolder+"/internal/adapter/database/postgres/ent/generate.tmpl", m.Dist+"/internal/adapter/database/postgres/ent/generate.go", m)
 
 	m.generatePostgresEnt()
 
-	gutil.Render(fs, srcFolder+"/internal/adapter/database/postgres/db/repository.tmpl", m.Dist+"/internal/adapter/database/postgres/db/repository_"+m.Domain+".go", m)
-	gutil.Render(fs, srcFolder+"/internal/adapter/database/postgres/db/mapper.tmpl", m.Dist+"/internal/adapter/database/postgres/db/mapper_"+m.Domain+".go", m)
+	gutil.Render(fs, srcFolder+"/internal/adapter/database/postgres/pg/repository.tmpl", m.Dist+"/internal/adapter/database/postgres/pg/repository_"+m.Domain+".go", m)
+	gutil.Render(fs, srcFolder+"/internal/adapter/database/postgres/pg/mapper.tmpl", m.Dist+"/internal/adapter/database/postgres/pg/mapper_"+m.Domain+".go", m)
 
 }
 

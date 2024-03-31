@@ -9,7 +9,7 @@ import (
  * {{.Name}}Repository implemented by repository.{{.Name}}Repository interface
  */
 
-type {{.Name|Upper}}Repository interface {
+type {{.Name|Upper}}RepositoryPg interface {
 	Crete(ctx context.Context, {{.Name}} domain.{{.Name|Upper}}) (*domain.{{.Name|Upper}}, error)
 	Get(ctx context.Context, ID int) (*domain.{{.Name|Upper}}, error)
     Update(ctx context.Context, ID int, {{.Name}} domain.{{.Name|Upper}}) (*domain.{{.Name|Upper}}, error)
