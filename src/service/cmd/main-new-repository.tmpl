@@ -1,5 +1,5 @@
-{{.Domain}}Repository := pg.New{{.Domain|Upper}}Repository(pgDB.Client)
-{{.Domain}}Service := service.New{{.Domain|Upper}}Service({{.Domain}}Repository)
+{{.Domain}}RepositoryPg := pg.New{{.Domain|Upper}}Repository(pgDB.Client)
+{{.Domain}}Service := service.New{{.Domain|Upper}}Service({{.Domain}}RepositoryPg)
 
 // +salvation NewRepository
 
