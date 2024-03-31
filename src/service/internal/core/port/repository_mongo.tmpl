@@ -1,0 +1,14 @@
+package port
+
+import (
+	"context"
+	"{{.Service.Module}}/internal/core/domain"
+)
+
+/**
+ * {{.Name}}RepositoryMongo implemented by repository.{{.Name}}RepositoryMongo interface
+ */
+
+type {{.Name|Upper}}RepositoryMongo interface {
+	Crete(ctx context.Context, {{.Name}} domain.{{.Name|Upper}}) (*domain.{{.Name|Upper}}, error)
+}

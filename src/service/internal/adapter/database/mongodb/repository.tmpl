@@ -1,0 +1,40 @@
+package mongodb
+
+import (
+	"context"
+	"{{.Module}}/internal/core/domain"
+	mongoutil "git.alibaba.ir/taraaz/salvation2/monorepo/pkg/util/mongo"
+	"go.mongodb.org/mongo-driver/mongo"
+	"time"
+)
+
+type {{.Domain|Upper}}Repository struct {
+	client     *mongo.Client
+	collection *mongo.Collection
+}
+
+func New{{.Domain|Upper}}Repository(client *mongo.Client, database string) *{{.Domain|Upper}}Repository {
+	collection := client.Database(database).Collection("{{.Domain}}")
+	return &{{.Domain|Upper}}Repository{
+		client:     client,
+		collection: collection,
+	}
+}
+
+func (r *{{.Domain|Upper}}Repository) Crete(ctx context.Context, d domain.{{.Domain|Upper}}) (*domain.{{.Domain|Upper}}, error) {
+	new{{.Domain|Upper}} := {{.Domain|Upper}}Schema{
+		CreatedAt: time.Now(),
+		Name:      d.Name,
+	}
+	document, _ := mongoutil.ToBSONDocument(new{{.Domain|Upper}})
+	result, err := r.collection.InsertOne(ctx, document)
+	if err != nil {
+		return nil, err
+	}
+	mongoID := mongoutil.GetMongoId(result)
+	res := domain.{{.Domain|Upper}}{
+		MongoID: mongoID,
+		Name:    d.Name,
+	}
+	return &res, nil
+}

@@ -9,6 +9,9 @@ import (
 	{{- if .GRPC }}
 	"{{.Module}}/cmd/gRPC"
 	{{- end }}
+	{{- if .DB.MongoDB }}
+    "{{.Module}}/internal/adapter/database/mongodb"
+    {{- end }}
 	{{- if .DB.PostgreSQL }}
 	"{{.Module}}/internal/adapter/database/postgres/pg"
 	{{- end }}
@@ -27,8 +30,25 @@ func main() {
     pgDB := pg.NewDB(dsn)
     {{- end }}
 
+    {{- if .DB.MongoDB }}
+    mongoURI := superConf.Get("db.mongodb.uri")
+    mgDB := mongodb.NewDB(mongoURI)
+    {{- end }}
+
+    {{- if .DB.PostgreSQL }}
     {{.Domain}}RepositoryPg := pg.New{{.Domain|Upper}}Repository(pgDB.Client)
-    {{.Domain}}Service := service.New{{.Domain|Upper}}Service({{.Domain}}RepositoryPg)
+    {{- end }}
+    {{- if .DB.MongoDB }}
+    carRepositoryMongo := mongodb.New{{.Domain|Upper}}Repository(mgDB.Client, superConf.Get("db.mongodb.database"))
+    {{- end }}
+    {{.Domain}}Service := service.New{{.Domain|Upper}}Service(
+        {{- if .DB.PostgreSQL }}
+        {{.Domain}}RepositoryPg,
+        {{- end }}
+        {{- if .DB.MongoDB }}
+        {{.Domain}}RepositoryMongo,
+        {{- end }}
+    )
 
     // +salvation NewRepository
 

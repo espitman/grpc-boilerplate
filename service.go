@@ -262,7 +262,11 @@ func (m *MainService) generatePostgresEnt() error {
 }
 
 func (m *MainService) generateMongoDB() {
-	// TODO: mongoDB
+	gutil.CreateDir(m.Dist + "/internal/adapter/database/mongodb")
+
+	gutil.Render(fs, srcFolder+"/internal/adapter/database/mongodb/db.tmpl", m.Dist+"/internal/adapter/database/mongodb/db.go", m)
+	gutil.Render(fs, srcFolder+"/internal/adapter/database/mongodb/repository.tmpl", m.Dist+"/internal/adapter/database/mongodb/repository_"+m.Domain+".go", m)
+	gutil.Render(fs, srcFolder+"/internal/adapter/database/mongodb/schema.tmpl", m.Dist+"/internal/adapter/database/mongodb/schema_"+m.Domain+".go", m)
 }
 
 func (m *MainService) generateSwagger() {

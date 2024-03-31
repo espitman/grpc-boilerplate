@@ -14,6 +14,7 @@ func {{.Domain}}DomainTo{{.Domain|Upper}}GetResponseDtoMapper(d *domain.{{.Domai
 	var resp {{.Domain}}GetResponseDto
 	resp.Payload.{{.Domain|Upper}} = {{.Domain}}Dto{
 		ID:   d.ID,
+		MongoID: d.MongoID,
 		Name:	d.Name,
 	}
 	return resp
@@ -30,6 +31,7 @@ func {{.Domain}}DomainTo{{.Domain|Upper}}UpdateResponseDtoMapper(d *domain.{{.Do
 	var resp {{.Domain}}UpdateResponseDto
 	resp.Payload.{{.Domain|Upper}} = {{.Domain}}Dto{
 		ID:   d.ID,
+		MongoID: d.MongoID,
 		Name: d.Name,
 	}
 	return resp
@@ -39,6 +41,7 @@ func {{.Domain}}DomainTo{{.Domain|Upper}}DeleteResponseDtoMapper(d *domain.{{.Do
 	var resp {{.Domain}}DeleteResponseDto
 	resp.Payload.{{.Domain|Upper}} = {{.Domain}}Dto{
 		ID:   d.ID,
+		MongoID: d.MongoID,
 		Name: d.Name,
 	}
 	return resp
