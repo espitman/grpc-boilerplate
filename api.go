@@ -54,6 +54,7 @@ func (Api) Add() error {
 	gutil.YamlReader(dist+"/.info/service.yaml", &mainService)
 	m.Module = mainService.Module
 	m.Name = mainService.Name
+	m.HTTP = true
 
 	appendToRouterFile(m)
 	appendToServerFile(m)
@@ -64,6 +65,8 @@ func (Api) Add() error {
 	gutil.Render(fs, srcFolder+"/internal/adapter/handler/http/mapper_name.tmpl", m.Dist+"/internal/adapter/handler/http/mapper_"+m.HTTPInfo.Name+".go", m)
 	gutil.Render(fs, srcFolder+"/internal/adapter/handler/http/router_name.tmpl", m.Dist+"/internal/adapter/handler/http/router_"+m.HTTPInfo.Name+".go", m)
 	gutil.Render(fs, srcFolder+"/internal/adapter/handler/http/validator_name.tmpl", m.Dist+"/internal/adapter/handler/http/validator_"+m.HTTPInfo.Name+".go", m)
+
+	m.generateSwagger()
 
 	return nil
 }
