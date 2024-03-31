@@ -39,7 +39,7 @@ func main() {
     {{.Domain}}RepositoryPg := pg.New{{.Domain|Upper}}Repository(pgDB.Client)
     {{- end }}
     {{- if .DB.MongoDB }}
-    carRepositoryMongo := mongodb.New{{.Domain|Upper}}Repository(mgDB.Client, superConf.Get("db.mongodb.database"))
+    {{.Domain}}RepositoryMongo := mongodb.New{{.Domain|Upper}}Repository(mgDB.Client, superConf.Get("db.mongodb.database"))
     {{- end }}
     {{.Domain}}Service := service.New{{.Domain|Upper}}Service(
         {{- if .DB.PostgreSQL }}

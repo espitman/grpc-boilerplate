@@ -13,6 +13,7 @@ type CorePort struct {
 	Service MainService
 	Name    string
 	Dist    string
+	DB      DB
 }
 
 func NewCorePort() *CorePort {
@@ -28,15 +29,16 @@ func NewCorePort() *CorePort {
 		Name:    name,
 		Dist:    dist,
 	}
-
 }
 
 func (m *CorePort) create() {
 	gutil2.Render(fs, srcFolder+"/internal/core/port/service.tmpl", m.Dist+"service_"+m.Name+".go", m)
-
-	gutil2.Render(fs, srcFolder+"/internal/core/port/repository_pg.tmpl", m.Dist+"repository_pg_"+m.Name+".go", m)
-
-	gutil2.Render(fs, srcFolder+"/internal/core/port/repository_mongo.tmpl", m.Dist+"repository_mongo_"+m.Name+".go", m)
+	if m.DB.PostgreSQL {
+		gutil2.Render(fs, srcFolder+"/internal/core/port/repository_pg.tmpl", m.Dist+"repository_pg_"+m.Name+".go", m)
+	}
+	if m.DB.MongoDB {
+		gutil2.Render(fs, srcFolder+"/internal/core/port/repository_mongo.tmpl", m.Dist+"repository_mongo_"+m.Name+".go", m)
+	}
 }
 
 func (Core) Port() error {

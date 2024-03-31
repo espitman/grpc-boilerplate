@@ -13,6 +13,7 @@ type CoreService struct {
 	Service MainService
 	Name    string
 	Dist    string
+	DB      DB
 }
 
 func NewCoreService() *CoreService {

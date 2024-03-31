@@ -141,6 +141,7 @@ func (m *MainService) generateCore() {
 		Service: *m,
 		Name:    m.Domain,
 		Dist:    dist,
+		DB:      m.DB,
 	}
 	d.create()
 

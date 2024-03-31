@@ -73,6 +73,7 @@ func (Core) All() error {
 	gutil.YamlReader(servicePath+"/.info/service.yaml", &mainService)
 	m.Module = mainService.Module
 	m.Name = mainService.Name
+	m.DB = mainService.DB
 
 	if mainService.HTTP {
 		appendToMainFileAPI(m)

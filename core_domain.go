@@ -16,6 +16,7 @@ type CoreDomain struct {
 	Service MainService
 	Name    string
 	Dist    string
+	DB      DB
 }
 
 func NewCoreDomain() (*CoreDomain, string, string) {
@@ -30,6 +31,7 @@ func NewCoreDomain() (*CoreDomain, string, string) {
 			Service: mainService,
 			Name:    name,
 			Dist:    dist,
+			DB:      mainService.DB,
 		},
 		servicePath,
 		name
