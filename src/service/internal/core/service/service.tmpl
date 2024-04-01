@@ -4,6 +4,9 @@ import (
 	"context"
 	"{{.Service.Module}}/internal/core/domain"
 	"{{.Service.Module}}/internal/core/port"
+	{{- if not .DB.PostgreSQL }}
+	"math/rand"
+	{{- end }}
 )
 
 /**
@@ -11,38 +14,111 @@ import (
  */
 
 type {{.Name|Upper}}Service struct {
+    {{- if .DB.PostgreSQL }}
 	{{.Name}}RepositoryPg port.{{.Name|Upper}}RepositoryPg
+	{{- end }}
+	{{- if .DB.MongoDB }}
 	{{.Name}}RepositoryMongo port.{{.Name|Upper}}RepositoryMongo
+	{{- end }}
 }
 
 func New{{.Name|Upper}}Service(
+    {{- if .DB.PostgreSQL }}
     {{.Name}}RepositoryPg port.{{.Name|Upper}}RepositoryPg,
+    {{- end }}
+    {{- if .DB.MongoDB }}
     {{.Name}}RepositoryMongo port.{{.Name|Upper}}RepositoryMongo,
+    {{- end }}
     ) *{{.Name|Upper}}Service {
 	return &{{.Name|Upper}}Service{
+	    {{- if .DB.PostgreSQL }}
 		{{.Name}}RepositoryPg: {{.Name}}RepositoryPg,
+		{{- end }}
+		{{- if .DB.MongoDB }}
 		{{.Name}}RepositoryMongo: {{.Name}}RepositoryMongo,
+		{{- end }}
 	}
 }
 
 func (s *{{.Name|Upper}}Service) Crete(ctx context.Context, {{.Name}} domain.{{.Name|Upper}}) (*domain.{{.Name|Upper}}, error) {
-	mongo{{.Name|Upper}}, _ := s.{{.Name}}RepositoryMongo.Crete(ctx, {{.Name}})
-    result, err := s.{{.Name}}RepositoryPg.Crete(ctx, {{.Name}})
+	var result domain.{{.Name|Upper}}
+    {{- if .DB.PostgreSQL }}
+    pg{{.Name|Upper}}, err := s.{{.Name}}RepositoryPg.Crete(ctx, {{.Name}})
+    if err != nil {
+        return nil, err
+    }
+    result.ID = pg{{.Name|Upper}}.ID
+    result.Name = pg{{.Name|Upper}}.Name
+    {{.Name}}.ID = pg{{.Name|Upper}}.ID
+    {{- else }}
+    {{.Name}}.ID = randomInt := rand.Intn(9999999)
+    {{- end }}
+    {{- if .DB.MongoDB }}
+    mongo{{.Name|Upper}}, err := s.{{.Name}}RepositoryMongo.Crete(ctx, {{.Name}})
     if err != nil {
         return nil, err
     }
     result.MongoID = mongo{{.Name|Upper}}.MongoID
-    return result, nil
+    result.Name = mongo{{.Name|Upper}}.Name
+    {{- end }}
+    return &result, nil
 }
 
 func (s *{{.Name|Upper}}Service) Get(ctx context.Context, ID int) (*domain.{{.Name|Upper}}, error) {
-	return s.{{.Name}}RepositoryPg.Get(ctx, ID)
+	var result domain.{{.Name|Upper}}
+	{{- if .DB.PostgreSQL }}
+    pg{{.Name|Upper}}, err := s.{{.Name}}RepositoryPg.Get(ctx, ID)
+    if err != nil {
+        return nil, err
+    }
+    result.ID = pg{{.Name|Upper}}.ID
+    result.Name = pg{{.Name|Upper}}.Name
+    {{- end }}
+    {{- if .DB.MongoDB }}
+    mongo{{.Name|Upper}}, err := s.{{.Name}}RepositoryMongo.GetByCode(ctx, ID)
+    if err != nil {
+        return nil, err
+    }
+    result.ID = mongo{{.Name|Upper}}.ID
+    result.MongoID = mongo{{.Name|Upper}}.MongoID
+    result.Name = mongo{{.Name|Upper}}.Name
+    {{- end }}
+    return &result, nil
 }
 
 func (s *{{.Name|Upper}}Service) Update(ctx context.Context, ID int, {{.Name}} domain.{{.Name|Upper}}) (*domain.{{.Name|Upper}}, error) {
-	return s.{{.Name}}RepositoryPg.Update(ctx, ID, {{.Name}})
+	var result domain.{{.Name|Upper}}
+    {{- if .DB.PostgreSQL }}
+	pg{{.Name|Upper}}, err := s.{{.Name}}RepositoryPg.Update(ctx, ID, {{.Name}})
+	if err != nil {
+		return nil, err
+	}
+	result = *pg{{.Name|Upper}}
+    {{- end }}
+    {{- if .DB.MongoDB }}
+	mongo{{.Name|Upper}}, err := s.{{.Name}}RepositoryMongo.UpdateByCode(ctx, ID, {{.Name}})
+	if err != nil {
+		return nil, err
+	}
+	result = *mongo{{.Name|Upper}}
+    {{- end }}
+	return &result, nil
 }
 
 func (s *{{.Name|Upper}}Service) Delete(ctx context.Context, ID int) (*domain.{{.Name|Upper}}, error) {
-	return s.{{.Name}}RepositoryPg.Delete(ctx, ID)
+	var result domain.{{.Name|Upper}}
+    {{- if .DB.PostgreSQL }}
+	pg{{.Name|Upper}}, err := s.{{.Name}}RepositoryPg.Delete(ctx, ID)
+	if err != nil {
+		return nil, err
+	}
+	result = *pg{{.Name|Upper}}
+    {{- end }}
+    {{- if .DB.MongoDB }}
+	err = s.{{.Name}}RepositoryMongo.DeleteByCode(ctx, ID)
+	if err != nil {
+		return nil, err
+	}
+    {{- end }}
+	return &result, nil
 }

@@ -11,4 +11,7 @@ import (
 
 type {{.Name|Upper}}RepositoryMongo interface {
 	Crete(ctx context.Context, {{.Name}} domain.{{.Name|Upper}}) (*domain.{{.Name|Upper}}, error)
+	GetByCode(ctx context.Context, code int) (*domain.{{.Name|Upper}}, error)
+    UpdateByCode(ctx context.Context, code int, {{.Name}} domain.{{.Name|Upper}}) (*domain.{{.Name|Upper}}, error)
+    DeleteByCode(ctx context.Context, code int) error
 }

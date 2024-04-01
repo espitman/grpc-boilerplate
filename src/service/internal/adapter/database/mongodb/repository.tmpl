@@ -4,7 +4,8 @@ import (
 	"context"
 	"{{.Module}}/internal/core/domain"
 	mongoutil "git.alibaba.ir/taraaz/salvation2/monorepo/pkg/util/mongo"
-	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/bson"
+    "go.mongodb.org/mongo-driver/mongo"
 	"time"
 )
 
@@ -24,6 +25,7 @@ func New{{.Domain|Upper}}Repository(client *mongo.Client, database string) *{{.D
 func (r *{{.Domain|Upper}}Repository) Crete(ctx context.Context, d domain.{{.Domain|Upper}}) (*domain.{{.Domain|Upper}}, error) {
 	new{{.Domain|Upper}} := {{.Domain|Upper}}Schema{
 		CreatedAt: time.Now(),
+		Code:      d.ID,
 		Name:      d.Name,
 	}
 	document, _ := mongoutil.ToBSONDocument(new{{.Domain|Upper}})
@@ -37,4 +39,42 @@ func (r *{{.Domain|Upper}}Repository) Crete(ctx context.Context, d domain.{{.Dom
 		Name:    d.Name,
 	}
 	return &res, nil
+}
+
+func (r *{{.Domain|Upper}}Repository) GetByCode(ctx context.Context, code int) (*domain.{{.Domain|Upper}}, error) {
+	filter := bson.M{"code": code}
+	var result {{.Domain|Upper}}Schema
+	err := r.collection.FindOne(ctx, filter).Decode(&result)
+	if err != nil {
+		return nil, err
+	}
+	{{.Domain}} := domain.{{.Domain|Upper}}{
+		ID:      result.Code,
+		MongoID: result.ID.Hex(),
+		Name:    result.Name,
+	}
+	return &{{.Domain}}, nil
+}
+
+func (r *{{.Domain|Upper}}Repository) UpdateByCode(ctx context.Context, code int, {{.Domain}} domain.{{.Domain|Upper}}) (*domain.{{.Domain|Upper}}, error) {
+	filter := bson.M{"code": code}
+    update := bson.M{"$set": bson.M{"name": {{.Domain}}.Name}}
+    opts := options.FindOneAndUpdate().SetReturnDocument(options.After)
+    var updated{{.Domain|Upper}} {{.Domain|Upper}}Schema
+    err := r.collection.FindOneAndUpdate(ctx, filter, update, opts).Decode(&updated{{.Domain|Upper}})
+    if err != nil {
+        return nil, err
+    }
+    {{.Domain}}.ID = updated{{.Domain|Upper}}.Code
+    {{.Domain}}.MongoID = updated{{.Domain|Upper}}.ID.Hex()
+    return &{{.Domain}}, nil
+}
+
+func (r *{{.Domain|Upper}}Repository) DeleteByCode(ctx context.Context, code int) error {
+	filter := bson.M{"code": code}
+	_, err := r.collection.DeleteOne(ctx, filter)
+	if err != nil {
+		return err
+	}
+	return nil
 }
