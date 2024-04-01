@@ -13,9 +13,7 @@ func {{.Domain}}CreateRequestDtoTo{{.Domain|Upper}}DomainMapper(dto {{.Domain}}C
 func {{.Domain}}DomainTo{{.Domain|Upper}}GetResponseDtoMapper(d *domain.{{.Domain|Upper}}) {{.Domain}}GetResponseDto {
 	var resp {{.Domain}}GetResponseDto
 	resp.Payload.{{.Domain|Upper}} = {{.Domain}}Dto{
-	    {{- if .DB.PostgreSQL }}
 		ID:   d.ID,
-		{{- end }}
         {{- if .DB.MongoDB }}
 		MongoID: d.MongoID,
 		{{- end }}
@@ -34,9 +32,7 @@ func {{.Domain}}UpdateRequestDtoTo{{.Domain|Upper}}DomainMapper(dto {{.Domain}}U
 func {{.Domain}}DomainTo{{.Domain|Upper}}UpdateResponseDtoMapper(d *domain.{{.Domain|Upper}}) {{.Domain}}UpdateResponseDto {
 	var resp {{.Domain}}UpdateResponseDto
 	resp.Payload.{{.Domain|Upper}} = {{.Domain}}Dto{
-	    {{- if .DB.PostgreSQL }}
 		ID:   d.ID,
-		{{- end }}
         {{- if .DB.MongoDB }}
 		MongoID: d.MongoID,
 		{{- end }}
@@ -48,9 +44,7 @@ func {{.Domain}}DomainTo{{.Domain|Upper}}UpdateResponseDtoMapper(d *domain.{{.Do
 func {{.Domain}}DomainTo{{.Domain|Upper}}DeleteResponseDtoMapper(d *domain.{{.Domain|Upper}}) {{.Domain}}DeleteResponseDto {
 	var resp {{.Domain}}DeleteResponseDto
 	resp.Payload.{{.Domain|Upper}} = {{.Domain}}Dto{
-	    {{- if .DB.PostgreSQL }}
 		ID:   d.ID,
-		{{- end }}
         {{- if .DB.MongoDB }}
 		MongoID: d.MongoID,
 		{{- end }}

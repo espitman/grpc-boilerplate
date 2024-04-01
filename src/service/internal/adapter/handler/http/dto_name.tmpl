@@ -1,9 +1,7 @@
 package http
 
 type {{.HTTPInfo.Name}}Dto struct {
-    {{- if .DB.PostgreSQL }}
 	ID   int `json:"id" validate:"required"`
-	{{- end }}
 	{{- if .DB.MongoDB }}
 	MongoID string `json:"mongoID" validate:"required"`
 	{{- end }}

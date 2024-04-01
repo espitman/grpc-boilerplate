@@ -58,6 +58,7 @@ func (s *{{.Name|Upper}}Service) Crete(ctx context.Context, {{.Name}} domain.{{.
     if err != nil {
         return nil, err
     }
+    result.ID = mongo{{.Name|Upper}}.ID
     result.MongoID = mongo{{.Name|Upper}}.MongoID
     result.Name = mongo{{.Name|Upper}}.Name
     {{- end }}
@@ -120,6 +121,7 @@ func (s *{{.Name|Upper}}Service) Delete(ctx context.Context, ID int) (*domain.{{
 	if err != nil {
 		return nil, err
 	}
+	result.ID = ID
     {{- end }}
 	return &result, nil
 }

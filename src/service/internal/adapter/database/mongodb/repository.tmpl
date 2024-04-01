@@ -36,6 +36,7 @@ func (r *{{.Domain|Upper}}Repository) Crete(ctx context.Context, d domain.{{.Dom
 	}
 	mongoID := mongoutil.GetMongoId(result)
 	res := domain.{{.Domain|Upper}}{
+	    ID:      d.ID,
 		MongoID: mongoID,
 		Name:    d.Name,
 	}
