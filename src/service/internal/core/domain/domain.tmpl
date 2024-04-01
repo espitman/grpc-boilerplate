@@ -1,9 +1,7 @@
 package domain
 
 type {{.Name|Upper}} struct {
-    {{- if .DB.PostgreSQL }}
     ID      int
-    {{- end }}
     {{- if .DB.MongoDB }}
     MongoID string
     {{- end }}

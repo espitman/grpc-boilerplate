@@ -17,9 +17,7 @@ import (
 	{{- end }}
 	"{{.Module}}/internal/core/service"
 	validatorutil "git.alibaba.ir/taraaz/salvation2/monorepo/pkg/util/validator"
-	{{- if .DB.PostgreSQL }}
 	superConf "github.com/espitman/go-super-conf"
-	{{- end }}
 )
 
 func main() {

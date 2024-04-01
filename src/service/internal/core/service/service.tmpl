@@ -51,7 +51,7 @@ func (s *{{.Name|Upper}}Service) Crete(ctx context.Context, {{.Name}} domain.{{.
     result.Name = pg{{.Name|Upper}}.Name
     {{.Name}}.ID = pg{{.Name|Upper}}.ID
     {{- else }}
-    {{.Name}}.ID = randomInt := rand.Intn(9999999)
+    {{.Name}}.ID = rand.Intn(9999999)
     {{- end }}
     {{- if .DB.MongoDB }}
     mongo{{.Name|Upper}}, err := s.{{.Name}}RepositoryMongo.Crete(ctx, {{.Name}})
@@ -107,6 +107,7 @@ func (s *{{.Name|Upper}}Service) Update(ctx context.Context, ID int, {{.Name}} d
 
 func (s *{{.Name|Upper}}Service) Delete(ctx context.Context, ID int) (*domain.{{.Name|Upper}}, error) {
 	var result domain.{{.Name|Upper}}
+	var err error
     {{- if .DB.PostgreSQL }}
 	pg{{.Name|Upper}}, err := s.{{.Name}}RepositoryPg.Delete(ctx, ID)
 	if err != nil {
